@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <title>Document</title>
+  <style>
+    table,
+    th,
+    td {
+      padding: 2px 5px;
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+
+    th {
+      background-color: lightgray;
+    }
+
+    .prefer {
+      color: blue;
+    }
+
+    .warning {
+      color: red;
+    }
+
+    .chapter {
+      background-color: black;
+      color: white;
+      padding: 5px
+    }
+
+    h4 {
+      margin-bottom: 0;
+    }
+
+    ul {
+      margin-top: 0;
+    }
+
+    pre {
+      margin: .25rem 1rem;
+      border-radius: .5rem;
+      padding: .25rem .5rem;
+      font-size: .9rem;
+      background-color: #242;
+      color: whitesmoke;
+      width: fit-content;
+    }
+
+    .float {
+      position: fixed;
+      width: 60px;
+      height: 60px;
+      bottom: 30px;
+      right: 30px;
+      background-color: royalblue;
+      color: #FFF;
+      border-radius: 30px;
+      text-align: center;
+      box-shadow: 2px 2px 2px black;
+    }
+
+    .my-float {
+      margin-top: 5px;
+      font-size: 3rem;
+    }
+  </style>
+</head>
+
+<body>
+  <a href="#end" class="float">
+    <span class="material-icons my-float">
+      arrow_circle_down
+    </span>
+  </a>
+  <h1 class="chapter">01 Android Studio와 친숙해지기</h1>
+  <h2>01-3 레이아웃 기초 익히기</h2>
+  <table>
+    <tr>
+      <th>접두어</th>
+      <th>의미</th>
+    </tr>
+    <tr>
+      <td>xmlns:android</td>
+      <td>Android 기본 SDK에 포함되어 있는 속성</td>
+    </tr>
+    <tr>
+      <td>xmlns:app</td>
+      <td>외부 library에 포함되어 있는 속성</td>
+    </tr>
+    <tr>
+      <td>xmlns:tools</td>
+      <td>Android Studio에서만 사용되는 속성</td>
+    </tr>
+  </table>
+  <p></p>
+  <table>
+    <caption>크기를 표시하는 단위와 Margin</caption>
+    <tr>
+      <th>단위</th>
+      <th>표현</th>
+      <th>설명</th>
+    </tr>
+    <tr>
+      <td>px</td>
+      <td>pixel</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="prefer">dp</td>
+      <td>density independent pixel</td>
+      <td>160dpi 화면을 기준으로 한 pixel<br>
+        ex) 160px/inch 에서는 1dp = 1px, 320px/inch 에서는 1dp = 2px</td>
+    </tr>
+    <tr>
+      <td class="prefer">sp</td>
+      <td>scale independent pixel</td>
+      <td>text 크기를 지정할 때 사용.<br>
+        가변 글꼴을 기준으로 한 pixel. 글꼴의 설정에 따라 1sp 당 pixel 수가 달라진다.</td>
+    </tr>
+    <tr>
+      <td>in</td>
+      <td>inch</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>mm</td>
+      <td>Millimeter</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>em</td>
+      <td>text 크기</td>
+      <td>글꼴과 상관없이 동일한 크기를 표시한다.</td>
+    </tr>
+  </table>
+  * view에는 dp, 글자는 sp를 사용한다.<br>
+  <p class="warning">주의) "app/src/main/res" folder에 file을 추가할 때 file 이름은 영어 소문자, 숫자, _ 기호로만 만들어야 하며, 첫 글자는 영문자로 시작해야 한다.</p>
+  <h1 class="chapter">02 Layout 익히기</h1>
+  <h2>02-1 대표적인 Layout</h2>
+  <table>
+    <caption style="text-align: left;">Android에서 제공하는 대표적인 Layout</caption>
+    <tr>
+      <th>Layout</th>
+      <th>설명</th>
+    </tr>
+    <tr>
+      <td>ConstraintLayout</td>
+      <td>기본 설정</td>
+    </tr>
+    <tr>
+      <td>LinearLayout</td>
+      <td>한 쪽 방향으로 차례대로 view를 추가하며 화면을 구성</td>
+    </tr>
+    <tr>
+      <td>FrameLayout</td>
+      <td>가장 상위에 있는 하나의 view 또는 view-group만 보여주는 방법</td>
+    </tr>
+    <tr>
+      <td>TableLayout</td>
+      <td>격자 모양의 배열을 사용하여 화면을 구성</td>
+    </tr>
+  </table>
+  <h4>View 영역 알아보기</h3>
+    <ul>
+      <li>view 영역(Box)</li>
+      <li>view 테두리(Border)</li>
+      <li>Margin</li>
+      <li>Padding</li>
+    </ul>
+    <h4>View의 색상</h3>
+      <table>
+        <tr>
+          <th>속성</th>
+          <th>값 형식</th>
+        </tr>
+        <tr>
+          <td>background</td>
+          <td>#[A]RGB, #[AA]RRGGBB 16진수로 표현한다.</td>
+        </tr>
+      </table>
+      <h2>02-2 LinearLayout</h2>
+      <h4>방향 설정</h4>
+      orientation = vertical | horizontal
+      <h4>코드에서 화면 구성하기</h4>
+      <pre>
+package com.xxx.hello
+
+import android.os.Bundle
+import android.widget.Button
+import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity2 : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
+        val main = LinearLayout(this)
+        main.orientation = LinearLayout.VERTICAL
+
+        val button = Button(this)
+        button.text = "Button1"
+        button.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT)
+
+        main.addView(button)
+
+        setContentView(main)
+    }
+}</pre>
+      <h4>화면 생성 과정 분석하기</h4>
+      context - UI 구성 요소인 view에 대한 정보를 담고 있는 객체.
+      <h4>view 정렬하기</h4>
+      <table>
+        <caption>두 가지 정렬 속성</caption>
+        <tr>
+          <th>속성</th>
+          <th>설명</th>
+          <th>값</th>
+        </tr>
+        <tr>
+          <td>layout_gravity</td>
+          <td>부모 container의 여유 공간 안에 view들을 정렬한다.</td>
+          <td>left, center, right, top, bottom 등</td>
+        </tr>
+        <tr>
+          <td>gravity</td>
+          <td>view 안에 표시하는 내용물을 정렬한다.<br>ex) TextView 안의 text</td>
+          <td>left, center, right, top, bottom 등<br> | 연산자를 사용해 여러 개의 값을 설정할 수 있다. 이때 | 연산자 양쪽에 공백이 없어야 한다.</td>
+        </tr>
+      </table>
+      <p>view의 글자 높이를 맞추는 LinearLayout의 <b>baselineAligned</b> 속성의 기본값은 true 이다.</p>
+      <h4>view의 margin과 padding 설정하기</h4>
+      <h4>여유 공간을 분할하는 layout_weight 속성</h4>
+      <ul>
+        <li>부모 container의 여유 공간을 분할하여 각 view들에게 할당한다.</li>
+        <li>layout_width, layout_height는 <b>wrap_content</b>나 <b>숫자값</b>으로 지정해야 한다.</li>
+        <li>설정 값은 비율이다.<br>ex) 두 개의 view에 각 1, 2를 설정하면 각 1/3, 2/3의 여유 공간을 할당 받는다.</li>
+      </ul>
+      <h2>02-3 RelativeLayout</h2>
+      <ul>
+        <li>Constraint layout으로 대체되었다.</li>
+        <li>부모 container나 다른 view와의 상대적인 위치를 이용해 위치를 결정한다.</li>
+      </ul>
+      <table>
+        <caption>부모 container와의 상대적인 위치</caption>
+        <tr>
+          <th>속성</th>
+          <th>설명</th>
+        </tr>
+        <tr>
+          <td>layout_alignParentTop</td>
+          <td>부모 container의 위쪽과 view의 위쪽을 맞춘다.</td>
+        </tr>
+        <tr>
+          <td>layout_alignParentBottom</td>
+          <td>부모 container의 아래쪽과 view의 아래쪽을 맞춘다.</td>
+        </tr>
+        <tr>
+          <td>layout_alignParentLeft</td>
+          <td>부모 container의 왼쪽과 view의 왼쪽을 맞춘다.</td>
+        </tr>
+        <tr>
+          <td>layout_alignParentRight</td>
+          <td>부모 container의 오른쪽과 view의 오른쪽을 맞춘다.</td>
+        </tr>
+        <tr>
+          <td>layout_centerHorizontal</td>
+          <td>부모 container의 수평 방향 중앙에 배치한다.</td>
+        </tr>
+        <tr>
+          <td>layout_centerVertical</td>
+          <td>부모 container의 수직 방향 중앙에 배치한다.</td>
+        </tr>
+        <tr>
+          <td>layout_centerInParent</td>
+          <td>부모 container의 수평, 수직 방향 중앙에 배치한다.</td>
+        </tr>
+      </table>
+      <p></p>
+      <table>
+        <caption>다른 view와의 상대적인 위치</caption>
+        <tr>
+          <th>속성</th>
+          <th>설명</th>
+        </tr>
+        <tr>
+          <td>layout_above</td>
+          <td>지정한 view의 위쪽에 배치한다.</td>
+        </tr>
+        <tr>
+          <td>layout_below</td>
+          <td>지정한 view의 아래쪽에 배치한다.</td>
+        </tr>
+        <tr>
+          <td>layout_toLeftOf</td>
+          <td>지정한 view의 왼쪽에 배치한다.</td>
+        </tr>
+        <tr>
+          <td>layout_toRightOf</td>
+          <td>지정한 view의 오른쪽에 배치한다.</td>
+        </tr>
+        <tr>
+          <td>layout_alignTop</td>
+          <td>지정한 view의 위쪽과 맞춘다.</td>
+        </tr>
+        <tr>
+          <td>layout_alignBottom</td>
+          <td>지정한 view의 아래쪽과 맞춘다.</td>
+        </tr>
+        <tr>
+          <td>layout_alignLeft</td>
+          <td>지정한 view의 왼쪽과 맞춘다.</td>
+        </tr>
+        <tr>
+          <td>layout_alignRight</td>
+          <td>지정한 view의 오른쪽과 맞춘다.</td>
+        </tr>
+        <tr>
+          <td>layout_alignBaseline</td>
+          <td>지정한 view와 내용물의 아래쪽 기준선을 맞춘다.</td>
+        </tr>
+      </table>
+      <h2>02-4 TableLayout</h2>
+      <ul>
+        <li>TableRow : 행</li>
+        <li>View : 열</li>
+        <li>TableRow의 높이 값은 내부적으로 항상 wrap_content로 설정되어 있어 화면을 꽉 채울 수 없다.</li>
+        <li>너비 값은 항상 match_parent 설정되어 가로 공간을 꽉 채운다.</li>
+        <li>stretchColumns로 행의 여유공간까지 모두 채울 수 있다.<br>
+          값은 column index를 지정한다. ex) android:stretchColumns="0,1,2"
+        </li>
+        <li>TableRow tag 안에 추가하는 view는 순서대로 0부터 시작하는 column index를 자동으로 부여 받는다.<br>
+          하지만 layout_column 속성으로 column index를 지정하면 그 순서를 설정 할 수 있다.</li>
+        <li>layout_span은 view가 여러 column에 걸쳐 있도록 만들기 위한 속성이다.</li>
+      </ul>
+      <h2>02-5 FrameLayout과 view의 전환</h2>
+      <ul>
+        <li>FrameLayout에 view를 넣으면 그중에서 하나의 view만 화면에 표시한다.</li>
+        <li>view를 추가할 때마다 하나씩 위쪽에 쌓이고(overlay) 제일 위에 있는 view만 화면에 보여진다.</li>
+        <li>visibility 속성을 <b>visible | invisible | gone</b> 중 하나로 설정해서 view의 표시 여부를 지정할 수 있다.</li>
+        <li></li>
+      </ul>
+      Resource id 참조 방법
+      <ul>
+        <li>XML : @+id/resource_id</li>
+        <li>source code : R.id.resource_id</li>
+      </ul>
+      source 에서 view을 찾는 방법
+      <ul>
+        <li>findViewById</li>
+        <li>view binding</li>
+      </ul>
+      <h2>02-6 ScrollView</h2>
+      <ul>
+        <li>ScrollView : default. vertical.</li>
+        <li>HorizontalScrollView</li>
+      </ul>
+      <h1 class="chapter">03 기본 Widget과 Drawable 사용하기</h1>
+      <h2>03-1 기본 Widget 다시 한 번 자세히 공부하기</h2>
+      <h4>TextView</h4>
+      <table>
+        <tr>
+          <th>속성</th>
+          <th>설명</th>
+          <th>값</th>
+        </tr>
+        <tr>
+          <td>text</td>
+          <td>문자열</td>
+          <td>직접 문자열을 넣거나 /app/res/values/strings.xml에 작성한 문자열을 지정한다.<br>
+            <pre>
+  &lt;!-- strings.xml -->
+  &lt;resources>
+    &lt;string name="person_name">홍길동&lt;/string>
+  &lt;/resources></pre>
+            ex) android:text="@string/person_name"
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3">다국어 지원하기<br>
+            <ul>
+              <li>/app/res/values-en/strings.xml 영어 지원</li>
+              <li>/app/res/values-ko/strings.xml 한글 지원</li>
+            </ul>
+            strings.xml이 저장될 folder 이름은 반드시 'values-{locale 이름}'으로 해야한다.<br>
+            단말기의 언어 설정에 따라 일치하는 strings.xml을 사용한다.<br>
+            일치하는 언어가 없다면 기본 folder인 values/strings.xml이 사용된다.
+          </td>
+        </tr>
+        <tr>
+          <td>textColor</td>
+          <td>문자열의 색상</td>
+          <td>#AARRGGBB</td>
+        </tr>
+        <tr>
+          <td>textSize</td>
+          <td>문자열의 크기(폰트 크기)</td>
+          <td>'sp' 단위를 권장한다.</td>
+        </tr>
+        <tr>
+          <td>textStyle</td>
+          <td>문자열의 style</td>
+          <td>normal, bold, italic<br>
+            '|' 기호를 사용해 여러 개의 속성을 함께 지정할 수 있다. 이때 '|' 기호의 앞뒤에 공백이 없어야 한다.</td>
+        </tr>
+        <tr>
+          <td>typeFace</td>
+          <td>글꼴</td>
+          <td>normal, sans, serif, monospace</td>
+        </tr>
+        <tr>
+          <td>maxLines</td>
+          <td>최대 줄 수</td>
+          <td></td>
+        </tr>
+      </table>
+      <h4>Button</h4>
+      <ul>
+        <li>Button은 TextView를 상속 받는다.</li>
+        <li>CompoundButton</li>
+        <li>CheckBox</li>
+        <li>RadioButton</li>
+      </ul>
+      <table>
+        <tr>
+          <th>속성</th>
+          <th>설명</th>
+          <th>값</th>
+        </tr>
+        <tr>
+          <td>checked</td>
+          <td>checkBox와 radioButton의 선택 여부 설정</td>
+          <td>true | false</td>
+        </tr>
+      </table>
+      <h4>EditText</h4>
+      <table>
+        <tr>
+          <th>속성</th>
+          <th>설명</th>
+          <th>값</th>
+        </tr>
+        <tr>
+          <td>inputType</td>
+          <td>입력 값 유형을 지정한다.</td>
+          <td>text | number | date | phone 등.</td>
+        </tr>
+        <tr>
+          <td>hint</td>
+          <td>입력 항목의 안내글. 글자를 입력하면 사라진다.</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>textColorHint</td>
+          <td>안내글 색상을 지정한다.</td>
+          <td></td>
+        </tr>
+      </table>
+      <h4>ImageView, ImageButton</h4>
+      <ul>
+        <li>image를 화면에 표시할 때 사용한다.</li>
+        <li>표시하려는 image는 /app/res/drawable folder에 저장한다.</li>
+      </ul>
+      <table>
+        <tr>
+          <th>속성</th>
+          <th>설명</th>
+          <th>값</th>
+        </tr>
+        <tr>
+          <td>android:src 또는 app:srcCompat</td>
+          <td>image file 이름을 확장자는 제외하고 지정한다.<br>app:srcCompat="@drawable/{image file name}"</td>
+          <td>png(권장) 또는 jpg</td>
+        </tr>
+        <tr>
+          <td>maxWidth, maxHeight</td>
+          <td>image 원본이 너무 크면 이 속성으로 최대 크기를 제한할 수 있다.</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>tint</td>
+          <td>image의 색상을 설정한다.</td>
+          <td>"#AARRGGBB"</td>
+        </tr>
+        <tr>
+          <td>scaleType</td>
+          <td>imageView의 크기에 맞게 원본 이미지의 크기를 자동으로 늘리거나 줄여서 보여줄 때 사용한다.</td>
+          <td>fitXY | centgerCrop | centerInside 등</td>
+        </tr>
+      </table><br>
+      <table>
+        <tr>
+          <th>해상도</th>
+          <th>folder 이름</th>
+        </tr>
+        <tr>
+          <td>초고해상도</td>
+          <td>/app/res/[drawable-xhdpi|drawable-xxhdpi|drawable-xxxhdpi]</td>
+        </tr>
+        <tr>
+          <td>고해상도</td>
+          <td>/app/res/drawable-hdpi</td>
+        </tr>
+        <tr>
+          <td>중간 해상도</td>
+          <td>/app/res/drawable-mdpi</td>
+        </tr>
+        <tr>
+          <td>저해상도</td>
+          <td>/app/res/drawable-ldpi</td>
+        </tr>
+      </table>
+      <h4>TextView, EditText의 다른 기능들</h4>
+      <table>
+        <tr>
+          <th>속성</th>
+          <th>설명</th>
+          <th>값</th>
+        </tr>
+        <tr>
+          <td>selectAllOnFocus</td>
+          <td>true 면 focus를 받을 때 전체 문자열을 선택한다.</td>
+          <td>true | false</td>
+        </tr>
+        <tr>
+          <td>autoLink</td>
+          <td>문서에 표함된 web page 주소나 email 주소를 link 색상으로 표시하고<br>누르면 바로 접속하거나 mail 편집기를 띄워주는 기능을 간단하게 넣을 수 있다.</td>
+          <td>true | false</td>
+        </tr>
+        <tr>
+          <td>lineSpacingMultiplier<br>lineSpacingExtra</td>
+          <td>줄 간격 조정</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>capitalize</td>
+          <td>글자, 단어, 문장 단위로 대소문자를 조절할 수 있다</td>
+          <td>characters | words | sentences</td>
+        </tr>
+        <tr>
+          <td>ellipsize</td>
+          <td>긴 문자열을 생략하여 ... 으로 표시한다.</td>
+          <td>none | start | middle | end</td>
+        </tr>
+        <tr>
+          <td>editable</td>
+          <td>입력되어 있는 문자열을 편집하지 못하게 하고 싶다면 false를 지정한다.</td>
+          <td>true | false</td>
+        </tr>
+      </table>
+      <h2>03-2 Drawable 만들기</h2>
+      <h4>Drawable</h4>
+      View에 설정할 수 있는 객체. XML file.
+      <table>
+        <caption>종류</caption>
+        <tr>
+          <th>drawable</th>
+          <th>설명</th>
+        </tr>
+        <tr>
+          <td>BitmapDrawable</td>
+          <td>image file을 보여줄 때 사용한다. bitmap graphic file(png, jpg, gif 등)</td>
+        </tr>
+        <tr>
+          <td>StateListDrawable</td>
+          <td>상태별로 다른 bitmap graphic을 참조한다.</td>
+        </tr>
+        <tr>
+          <td>TransitionDrawable</td>
+          <td>두 개의 drawable을 서로 전환할 수 있다.</td>
+        </tr>
+        <tr>
+          <td>ShapeDrawable</td>
+          <td>색상과 gradation을 포함하여 도형 모양을 정의할 수 있다.</td>
+        </tr>
+        <tr>
+          <td>InsetDrawable</td>
+          <td>지정된 거리만큼 다른 drawable을 들어서 보여줄 수 있다.</td>
+        </tr>
+        <tr>
+          <td>ClipDrawable</td>
+          <td>level 값을 기준으로 다른 drawable을 clipping할 수 있다.</td>
+        </tr>
+        <tr>
+          <td>ScaleDrawable</td>
+          <td>level 값을 기준으로 다른 drawable 크기를 변경할 수 있다.</td>
+        </tr>
+      </table>
+      <h4>StateListDrawable 만들기</h4>
+      View의 상태에 따라 view에 보여줄 graphic을 다르게 지정할 수 있다.<br><br>
+      app/res/drawable/finger_drawable.xml
+      <pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;selector xmlns:android="http://schemas.android.com/apk/res/android">
+  &lt;item android:drawable="@drawable/finger_pressed" 
+        android:state_pressed="true" />
+  &lt;item android:drawable="@drawable/finger" />
+&lt;/selector></pre>
+      이렇게 만든 xml을 view의 background로 지정한다.
+      <h4>ShapeDrawable 만들기</h4>
+      /app/res/rect_drawable.xml 사각형
+      <pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;shape
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:shape="rectangle">
+  &lt;size
+    android:width="200dp"
+    android:height="120dp" />
+  &lt;stroke
+    android:width="4dp"
+    android:color="#070" />
+  &lt;solid android:color="#f77" />
+  &lt;padding android:bottom="1dp" />
+&lt;/shape></pre><br>
+      /app/res/back_drawable.xml
+      <pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;shape
+xmlns:android="http://schemas.android.com/apk/res/android">
+  &lt;gradient
+    android:angle="90"
+    android:centerColor="#3250b4"
+    android:centerY="0.5"
+    android:endColor="#254095"
+    android:startColor="#7288db" />
+  &lt;corners android:radius="2dp" />
+&lt;/shape>
+</pre><br>
+      &lt;layer-list> tag를 사용하면 여러 개의 graphic를 하나의 xml file에 넣을 수 있다.
+      <pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;layer-list
+  xmlns:android="http://schemas.android.com/apk/res/android">
+
+  &lt;item>
+    &lt;shape android:shape="rectangle">
+      &lt;stroke
+          android:width="1dp"
+          android:color="#0F0" />
+      &lt;solid android:color="#00000000" />
+      &lt;size
+        android:width="200dp"
+        android:height="100dp" />
+    &lt;/shape>
+  &lt;/item>
+
+  &lt;item android:top="1dp" android:bottom="1dp" android:right="1dp" android:left="1dp">
+    &lt;shape android:shape="rectangle">
+      &lt;stroke android:width="1dp" android:color="#F00"/>
+      &lt;solid android:color="#00000000" />
+    &lt;/shape>
+  &lt;/item>
+&lt;/layer-list></pre>
+      <h2>03-3 Event 처리 이해하기</h2>
+      <h4>event 처리 방식</h4>
+      <ul>
+        <li>MotionEvent</li>
+        <li>KeyEvent</li>
+      </ul>
+      <table>
+        <caption>대표적인 event 유형</caption>
+        <tr>
+          <th>속성</th>
+          <th>설명</th>
+          <th>Listener</th>
+        </tr>
+        <tr>
+          <td>Click</td>
+          <td>view를 click할 때 발생한다.</td>
+          <td>android.view.View.OnClickListener<br>abstract fun onClick(v: View!): Unit</td>
+        </tr>
+        <tr>
+          <td>Touch</td>
+          <td>화면을 손가락으로 누를 때 발생한다.</td>
+          <td>android.view.View.OnTouchListener<br>abstract fun onTouch(v: View!, event: MotionEvent!):Boolean</td>
+        </tr>
+        <tr>
+          <td>Key</td>
+          <td>keypad나 hardware button을 누를 때 발생한다.</td>
+          <td>android.view.View.OnKeyListener<br>abstract fun onKey(v: View!, keyCode: Int, event: KeyEvent!)</td>
+        </tr>
+        <tr>
+          <td>Gesture</td>
+          <td>touch event 중에서 scroll과 같이 일정한 pattern으로 구분되는 event</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Focus</td>
+          <td>view마다 순서대로 주어지는 focus</td>
+          <td>android.view.View.OnFocusChangeListener<br>abstract fun onFocusChange(v: View!, hasFocus: Boolean): Unit</td>
+        </tr>
+        <tr>
+          <td>회전 방향 변경</td>
+          <td>화면의 방향이 가로와 세로로 바뀔 때 발생한다.</td>
+          <td></td>
+        </tr>
+      </table><br>
+      <table>
+        <caption>Gesture event를 통해 처리할 수 있는 event 유형들</caption>
+        <tr>
+          <th>method</th>
+          <th>event 유형</th>
+        </tr>
+        <tr>
+          <td>onDown()</td>
+          <td>화면이 눌렸을 경우</td>
+        </tr>
+        <tr>
+          <td>onShowPress()</td>
+          <td>화면이 눌렸다 떼어지는 경우</td>
+        </tr>
+        <tr>
+          <td>onSingleTapUp()</td>
+          <td>화면이 한 손가락으로 눌렸다 떼어지는 경우</td>
+        </tr>
+        <tr>
+          <td>onSingleTapConfirmed()</td>
+          <td>화면이 한 손가락으로 눌려지는 경우</td>
+        </tr>
+        <tr>
+          <td>onDoubleTap()</td>
+          <td>화면이 두 손가락으로 눌려지는 경우</td>
+        </tr>
+        <tr>
+          <td>onDoubleTapEvent()</td>
+          <td>화면이 두 손가락으로 눌려진 상태에서 떼거나 이동하는 등 세부적인 액션을 취하는 경우</td>
+        </tr>
+        <tr>
+          <td>onScroll()</td>
+          <td>화면이 눌린 채 일정한 속도와 방향으로 움직였다 떼는 경우</td>
+        </tr>
+        <tr>
+          <td>onFling()</td>
+          <td>화면이 눌린 채 가속도를 붙여 손가락을 움직였다 떼는 경우</td>
+        </tr>
+        <tr>
+          <td>onLongPress()</td>
+          <td>화면을 손가락으로 오래 누르는 경우</td>
+        </tr>
+      </table>
+      <h4>Touch event 처리하기</h4>
+      activity_main.xml
+      <pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  tools:context=".MainActivity">
+
+  &lt;View
+    android:id="@+id/view"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:background="#faa" />
+
+  &lt;View
+    android:id="@+id/view2"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:background="#afa" />
+
+  &lt;ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:background="#aaf">
+
+    &lt;LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+
+      &lt;TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+    &lt;/LinearLayout>
+  &lt;/ScrollView>
+&lt;/LinearLayout></pre><br>
+      MainActivity.kt
+      <pre>
+package com.xxx.sampleevent
+
+import android.os.Bundle
+import android.view.MotionEvent
+import androidx.appcompat.app.AppCompatActivity
+import com.jeongchaeuk.sampleevent.databinding.ActivityMainBinding
+
+class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.view.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    print("action_down [${event.x} ${event.y}]")
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    print("action_move [${event.x} ${event.y}]")
+                }
+                MotionEvent.ACTION_UP -> {
+                    print("action_up [${event.x} ${event.y}]")
+                }
+                else -> {
+                    print("nothing")
+                }
+            }
+
+            true
+        }
+    }
+
+    fun print(text: String) {
+        binding.textView.append(text+"\n")
+    }
+}</pre>
+      <h4>Gesture event 처리하기</h4>
+      참고: <a href="https://developer.android.com/training/gestures" target="_blank">Use touch gestures</a>
+      <pre>
+package com.xxx.sampleevent
+
+import android.os.Bundle
+import android.view.GestureDetector
+import android.view.MotionEvent
+import androidx.appcompat.app.AppCompatActivity
+import com.jeongchaeuk.sampleevent.databinding.ActivityMainBinding
+
+class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener {
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var detector: GestureDetector
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        this.setContentView(binding.root)
+
+        detector = GestureDetector(this, this)
+
+        binding.view.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    print("action_down [${event.x} ${event.y}]")
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    print("action_move [${event.x} ${event.y}]")
+                }
+                MotionEvent.ACTION_UP -> {
+                    print("action_up [${event.x} ${event.y}]")
+                }
+                else -> {
+                    print("nothing")
+                }
+            }
+
+            v.performClick()
+            true
+        }
+
+        binding.view2.setOnTouchListener { v, event ->
+            detector.onTouchEvent(event)
+            v.performClick()
+            true
+        }
+    }
+
+    private fun print(text: String) {
+        binding.textView.append(text+"\n")
+    }
+
+    override fun onDown(e: MotionEvent?): Boolean {
+        print("called onDown()")
+        return true
+    }
+
+    override fun onShowPress(e: MotionEvent?) {
+        print("called onShowPress()")
+    }
+
+    override fun onSingleTapUp(e: MotionEvent?): Boolean {
+        print("called onShowPress()")
+        return true
+    }
+
+    override fun onScroll(
+        e1: MotionEvent?,
+        e2: MotionEvent?,
+        distanceX: Float,
+        distanceY: Float,
+    ): Boolean {
+        print("called onScroll(), x=$distanceX, y=$distanceY")
+        return true
+    }
+
+    override fun onLongPress(e: MotionEvent?) {
+        print("called onLongPress()")
+    }
+
+    override fun onFling(
+        e1: MotionEvent?,
+        e2: MotionEvent?,
+        velocityX: Float,
+        velocityY: Float,
+    ): Boolean {
+        print("called onFling(), x=$velocityX, y=$velocityY")
+        return true
+    }
+}</pre>
+      <h4>Key event 처리하기</h4>
+      <ul>
+        <li>abstract fun onKeyDown(keyCode: Int, event: KeyEvent!): Boolean</li>
+        <li>interface OnKeyListener<br>abstract fun onKey(v: View!, keyCode: Int, event: KeyEvent!): Boolean</li>
+      </ul>
+      <table>
+        <caption></caption>
+        <tr>
+          <th>key code</th>
+          <th>설명</th>
+        </tr>
+        <tr>
+          <td>KEYCODE_DPAD_[LEFT | RIGHT | UP | DOWN | CENTER]</td>
+          <td>방향 화살표, 중앙</td>
+        </tr>
+        <tr>
+          <td>KEYCODE_[CALL | ENDCALL]</td>
+          <td>통화, 통화 종료</td>
+        </tr>
+        <tr>
+          <td>KEYCODE_BACK</td>
+          <td>뒤로가기</td>
+        </tr>
+        <tr>
+          <td>KEYCODE_CAMERA</td>
+          <td>camera</td>
+        </tr>
+        <tr>
+          <td>KEYCODE_VOLUME_[UP | DOWN]</td>
+          <td>소리 쿠기 증가, 감소</td>
+        </tr>
+        <tr>
+          <td>KEYCODE_[0-9 | A-Z]</td>
+          <td>0~9, A~Z</td>
+        </tr>
+      </table>
+      <h4>단말 방향(Orientation)을 전환했을 때 event 처리하기</h4>
+      <ul>
+        <li>activity는 memory에서 없어졌다가 다시 만들어 진다.</li>
+        <li>방향을 바꿨을 떄 다른 XML layout을 보여준다.</li>
+        <li>세로 : res/layout/*.xml<br>가로 : res/layout-land/*.xml</li>
+      </ul>
+      <pre>
+package com.xxx.sampleorientation
+
+import android.os.Bundle
+import android.os.PersistableBundle
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.jeongchaeuk.sampleorientation.databinding.ActivityMainBinding
+
+class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
+    private var name: String? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        showToast("onCreate()")
+
+        binding.button.setOnClickListener {
+            name = binding.editText.text.toString()
+            showToast("입력된 값을 변수에 저장했습니다. ${name}")
+        }
+
+        if (savedInstanceState !== null) {
+            name = savedInstanceState.getString("name")
+            showToast("값을 복원 했습니다. ${name}")
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
+
+        outState.putString("name", name)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        showToast("onStart()")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        showToast("onStop()")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        showToast("onDestroy()")
+    }
+
+    private fun showToast(msg: String) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+    }
+}</pre>
+      <h4>Activity를 유지할 수 있는 방법</h4>
+      configChanges 속성 값이 설정되면 system은 activity의 상태 변화를 activity 쪽으로 알려주기만 한다.<br>
+      따라서 개발자가 직접 각 상태 변화에 따른 대응 코드를 작성해야 한다.<br>
+      참고: <a href="https://developer.android.com/guide/topics/resources/runtime-changes" target="_blank">Handle configuration changes</a><br><br>
+      AndroidManifest.xml
+      <pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;manifest
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.xxx.sampleorientation2">
+
+  &lt;application
+    ...
+    &lt;activity
+      android:name=".MainActivity"
+      android:configChanges="orientation|screenSize|keyboardHidden">
+      ...      
+    &lt;/activity>
+  &lt;/application>
+
+&lt;/manifest></pre><br>
+
+      MainActivity.kt
+      <pre>
+package com.xxx.sampleorientation2
+
+import android.content.res.Configuration
+import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+  ...
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+        when (newConfig.orientation) {
+            Configuration.ORIENTATION_PORTRAIT->{ showToast("ORIENTATION_PORTRAIT") }
+            Configuration.ORIENTATION_LANDSCAPE->{ showToast("ORIENTATION_LANDSCAPE") }
+            else->{ showToast("ORIENTATION_UNKNOWN") }
+        }
+    }
+
+    private fun showToast(text: String) {
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+    }
+}</pre><br>
+      방향을 고정하고 싶다면 screenOrientation 속성을 사용한다.
+      <pre>
+&lt;activity
+  android:name=".MainActivity"
+  android:screenOrientation="landscape"
+  android:configChanges="orientation|screenSize|keyboardHidden">
+&lt;/activity>
+</pre>
+      <h2>03-4 Toast, SnackBar 그리고 대화상자 사용하기</h2>
+      <ul>
+        <li>AndroidStudio에서 debug message 출력을 위해 Log class를 사용한다.</li>
+        <li>Logcat window에 message가 출력된다.</li>
+      </ul>
+      Toast 출력<br>
+      <ul>
+        <li>open static fun makeText(context: Context!, text: CharSequence!, duration: Int): Toast!</li>
+        <li>open fun show(): Unit</li>
+      </ul>
+      <ul>
+        <li>open fun setGravity(gravity: Int, xOffset: Int, yOffset: Int): Unit<br>
+          Toast view가 보이는 위치를 변경한다.
+        </li>
+        <li>open fun setMargin(horizontalMargin: Float, verticalMargin: Float): Unit<br>
+          Toast view의 외부 여백을 지정한다.
+        </li>
+      </ul>
+      <h4>Toast 위치 바꿔 보여주기</h4>
+      <pre>
+package com.xxx.sample
+
+import android.os.Bundle
+import android.view.Gravity
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.xxx.sample.databinding.ActivityMainBinding
+
+class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.button.setOnClickListener {
+            var toast = Toast.makeText(applicationContext, "toast", Toast.LENGTH_SHORT)
+
+            val x = try {
+                binding.editText.text.toString().toInt()
+            } catch (e: NumberFormatException) {
+                0
+            }
+
+            val y = try {
+                binding.editText2.text.toString().toInt()
+            } catch (e: NumberFormatException) {
+                0
+            }
+
+            toast.setGravity(Gravity.TOP, x, y)
+            toast.show()
+        }
+    }
+}</pre>
+      <h4>Toast 모양 바꿔 보여주기</h4>
+      Toast의 모양<br>/res/drawable/toast.xml
+      <pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;shape
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:shape="rectangle">
+  &lt;stroke
+    android:width="4dp"
+    android:color="#AA0" />
+  &lt;solid android:color="#830" />
+  &lt;padding
+    android:bottom="20dp"
+    android:left="20dp"
+    android:right="20dp"
+    android:top="20dp" />
+  &lt;corners android:radius="15dp"/>
+&lt;/shape></pre><br>
+Toast 위한 layout<br>/res/layout/toastborder.xml
+<pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/toast_layout_root"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="horizontal"
+  android:padding="10dp">
+
+  &lt;TextView
+    android:id="@+id/textView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/toast"
+    android:padding="20dp"
+    android:textSize="32sp" />
+&lt;/LinearLayout></pre><br>
+MainActivity.kt
+<pre>
+package com.xxx.sample
+
+import android.os.Bundle
+import android.view.Gravity
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.xxx.sample.databinding.ActivityMainBinding
+import com.xxx.sample.databinding.ToastborderBinding
+
+class MainActivity : AppCompatActivity() {
+    ...
+    private lateinit var toastBinding: ToastborderBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        ...
+        binding.button2.setOnClickListener {
+            toastBinding = ToastborderBinding.inflate(layoutInflater)
+            toastBinding.textView.text = "모양 바꾼 Toast"
+
+            var toast = Toast(this)
+            toast.setGravity(Gravity.CENTER, 0, -100)
+            toast.duration = Toast.LENGTH_SHORT
+            
+            // API Level 30 부터 지원하지 않는다!
+            toast.view = toastBinding.root
+
+            toast.show()
+        }
+    }
+}</pre>
+      <h4>Snackbar 보여주기</h4>
+      <h4>알림 대화상자 보여주기</h4>
+      <h2>03-5 ProgressBar 사용하기</h2>
+
+
+
+      <br><br><br>
+      <p id="end">- END -</p>
+
+</body>
+
+</html>
