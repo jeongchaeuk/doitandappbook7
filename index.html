@@ -18,6 +18,7 @@
 
     th {
       background-color: lightgray;
+      text-align: center;
     }
 
     .prefer {
@@ -34,12 +35,24 @@
       padding: 5px
     }
 
+    .chapter-title {
+      background-color: black;
+      color: orange;
+      padding: 5px
+    }
+
+    .chapter-number {
+      background-color: orange;
+      color: black;
+      padding: 5px;
+    }
+
     h4 {
       margin-bottom: 0;
     }
 
     ul {
-      margin-top: 0;
+      margin-top: .2rem;
     }
 
     pre {
@@ -62,12 +75,18 @@
       color: #FFF;
       border-radius: 30px;
       text-align: center;
-      box-shadow: 2px 2px 2px black;
     }
 
     .my-float {
       margin-top: 5px;
       font-size: 3rem;
+    }
+
+    .my-strong {
+      background-color: black;
+      color: orange;
+      border-radius: .5rem;
+      padding: .1rem .5rem;
     }
   </style>
 </head>
@@ -78,7 +97,7 @@
       arrow_circle_down
     </span>
   </a>
-  <h1 class="chapter">01 Android Studio와 친숙해지기</h1>
+  <h1><span class="chapter-number">01</span><span class="chapter-title">Android Studio와 친숙해지기</span></h1>
   <h2>01-3 레이아웃 기초 익히기</h2>
   <table>
     <tr>
@@ -141,7 +160,7 @@
   </table>
   * view에는 dp, 글자는 sp를 사용한다.<br>
   <p class="warning">주의) "app/src/main/res" folder에 file을 추가할 때 file 이름은 영어 소문자, 숫자, _ 기호로만 만들어야 하며, 첫 글자는 영문자로 시작해야 한다.</p>
-  <h1 class="chapter">02 Layout 익히기</h1>
+  <h1><span class="chapter-number">02</span><span class="chapter-title">Layout 익히기</span></h1>
   <h2>02-1 대표적인 Layout</h2>
   <table>
     <caption style="text-align: left;">Android에서 제공하는 대표적인 Layout</caption>
@@ -361,7 +380,7 @@ class MainActivity2 : AppCompatActivity() {
         <li>ScrollView : default. vertical.</li>
         <li>HorizontalScrollView</li>
       </ul>
-      <h1 class="chapter">03 기본 Widget과 Drawable 사용하기</h1>
+      <h1><span class="chapter-number">03</span><span class="chapter-title">기본 Widget과 Drawable 사용하기</span></h1>
       <h2>03-1 기본 Widget 다시 한 번 자세히 공부하기</h2>
       <h4>TextView</h4>
       <table>
@@ -1155,8 +1174,8 @@ class MainActivity : AppCompatActivity() {
     android:top="20dp" />
   &lt;corners android:radius="15dp"/>
 &lt;/shape></pre><br>
-Toast 위한 layout<br>/res/layout/toastborder.xml
-<pre>
+      Toast 위한 layout<br>/res/layout/toastborder.xml
+      <pre>
 &lt;?xml version="1.0" encoding="utf-8"?>
 &lt;LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
@@ -1174,8 +1193,8 @@ Toast 위한 layout<br>/res/layout/toastborder.xml
     android:padding="20dp"
     android:textSize="32sp" />
 &lt;/LinearLayout></pre><br>
-MainActivity.kt
-<pre>
+      MainActivity.kt
+      <pre>
 package com.xxx.sample
 
 import android.os.Bundle
@@ -1208,8 +1227,251 @@ class MainActivity : AppCompatActivity() {
     }
 }</pre>
       <h4>Snackbar 보여주기</h4>
+      <ul>
+        <li>Material library를 project에 추가해야 사용할 수 있다.</li>
+        <li>AppBarLayout를 download 함으로 추가할 수 있다.</li>
+      </ul>
+      <pre>
+binding.button3.setOnClickListener {
+  // it: View!
+  Snackbar.make(it, "스낵바입니다.", Snackbar.LENGTH_LONG).show()
+}</pre>
       <h4>알림 대화상자 보여주기</h4>
+      <pre>
+import android.content.DialogInterface
+import androidx.appcompat.app.AlertDialog
+...        
+binding.button.setOnClickListener {
+  AlertDialog.Builder(this)
+    .setTitle("안내")
+    .setMessage("종료하시겠습니까?")
+    .setIcon(android.R.drawable.ic_dialog_alert)
+    .setPositiveButton("예") { dialog, which ->
+        run {
+            binding.textView.text = "예 버튼이 눌렸습니다."
+        }
+    }
+    .setNeutralButton("취소") { dialog, which ->
+        run {
+            binding.textView.text = "취소 버튼이 눌렸습니다."
+        }
+    }
+    .setNegativeButton("아니오") { dialog, which ->
+        run {
+            binding.textView.text = "아니오 버튼이 눌렀습니다."
+        }
+    }
+    .create()
+    .show()
+}</pre>
+      <img src="alert_dialog.png" style="border:1px solid black; border-radius: 5px;" />
       <h2>03-5 ProgressBar 사용하기</h2>
+      <h4>ProgressBar</h4>
+      작업의 진행 정도를 표시하거나 작업이 진행 중임을 사용자에게 알려준다.<br>
+      <table>
+        <caption></caption>
+        <tr>
+          <th>속성</th>
+          <th>설명</th>
+        </tr>
+        <tr>
+          <td>막대 모양</td>
+          <td>작업의 진행 정도를 알려 준다.<br>style 속성 값을 '?android:attr/progressBarStyleHorizontal'로 설정한다.</td>
+        </tr>
+        <tr>
+          <td>원 모양</td>
+          <td>작업이 진행 중임을 알려준다.</td>
+        </tr>
+      </table><br>
+      <table>
+        <tr>
+          <th>method</th>
+          <th>설명</th>
+        </tr>
+        <tr>
+          <td>open fun setProgress(progress: Int): Unit</td>
+          <td>현재 값을 설정한다.</td>
+        </tr>
+        <tr>
+          <td>fun incrementProgressBy(diff: Int): Unit</td>
+          <td>현재 값을 기준으로 값을 더하거나 뺀다.</td>
+        </tr>
+      </table>
+      <h1><span class="chapter-number">04</span><span class="chapter-title">여러 화면 간 전환하기</span></h1>
+      <h2>04-1 Layout Inflation 이해하기</h2>
+      <ul>
+        <li>App을 실행할 때 layout file(*.xml)과 source code file(*.kt / *.java)이 필요하다.<br>
+        <li><span class="my-strong">setContentView(R.layout.{layout file name})</span> method는 화면 전체에 표시할 XML layout이나 view 객체를 지정한다.
+          <ul>
+            <li>R.layout : "/res/layout" folder</li>
+            <li>layout file name에 확장자 xml은 포함하지 않는다.</li>
+            <li>ex) R.layout.activity_main</li>
+          </ul>
+        </li>
+        <li>App이 실행될 때 XML layout 내용이 memory에 객체화되고 이것을 source file에서 사용한다.</li>
+        <li>XML layout 내용이 memory에 객체화되는 과정을 <span class="my-strong">Inflation</span>이라고 한다.</li>
+        <li>Inflation 되기 전에는 layout element들을 이용할 수 없다.</li>
+      </ul>
+      <h4>부분화면 보여주기</h4>
+      <ul>
+        <li>부분 화면(부분 layout)을 memory에 객체화하려면 <b>Inflater</b>를 사용한다.</li>
+        <li>Android는 이를 위해 system service로 <span class="my-strong">LayoutInflater</span> class를 제공한다.<br>
+          (system service는 단말기가 시작되면서 항상 실행되는 service이다.)<br>
+          LayoutInflater는 layout XML file로 대응되는 <b>'android.view.View'</b> 객체를 만든다.</li>
+        <li>이 class 객체는 직접 생성하지 않고 아래 method들로 이미 현재 컨텍스트에 연결되고 실행중인 기기에 대해 올바르게 구성된 표준 LayoutInflater instance를 검색한다.<br>
+          <table>
+            <tr>
+              <th>class</th>
+              <th>method</th>
+              <th>parameter</th>
+            </tr>
+            <tr>
+              <td>android.app.Activity</td>
+              <td>open fun getLayoutInflater(): LayoutInflater</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>android.content.Context</td>
+              <td>abstract fun getSystemService(name: String): Any!</td>
+              <td>Context.LAYOUT_INFLATER_SERVICE</td>
+            </tr>
+            <tr>
+              <td>android.view.LayoutInflater</td>
+              <td>open static fun from(context: Context!): LayoutInflater!</td>
+              <td>this</td>
+            </tr>
+          </table>
+        </li>
+      </ul>
+      activity_menu.xml<br>
+      <pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  tools:context=".MenuActivity">
+
+  &lt;TextView
+    android:id="@+id/textView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="버튼을 눌러 부분 화면을 추가하세요."/>
+
+  &lt;Button
+    android:id="@+id/button"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="추가하기"/>
+
+  &lt;LinearLayout
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+  &lt;/LinearLayout>
+&lt;/LinearLayout></pre><br>
+      sub1.xml<br>
+      <pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  &lt;TextView
+    android:id="@+id/textView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="부분화면 1"/>
+
+    &lt;CheckBox
+      android:id="@+id/checkBox"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="동의합니다."/>
+&lt;/LinearLayout>  
+</pre><br>
+      MenuActivity.kt<br>
+      <pre>
+package com.xxx.sample
+
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.xxx.sample.databinding.ActivityMenuBinding
+import com.xxx.sample.databinding.Sub1Binding
+
+class MenuActivity : AppCompatActivity() {
+  private lateinit var binding: ActivityMenuBinding
+  private lateinit var subBinding: Sub1Binding
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+    binding = ActivityMenuBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
+    binding.button.setOnClickListener {
+        subBinding = Sub1Binding.inflate(layoutInflater, binding.container, true)
+        subBinding.checkBox.text = "로딩되었습니다."
+    }
+  }
+}</pre><br>
+      AndroidManifest.xml<br>
+      <pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;manifest
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.xxx.sample">
+
+  &lt;application
+    android:allowBackup="true"
+    android:icon="@mipmap/ic_launcher"
+    android:label="@string/app_name"
+    android:roundIcon="@mipmap/ic_launcher_round"
+    android:supportsRtl="true"
+    android:theme="@style/Theme.Samples">
+
+    &lt;activity android:name=".MenuActivity">
+      &lt;intent-filter>
+        &lt;action android:name="android.intent.action.MAIN" />
+        &lt;category android:name="android.intent.category.LAUNCHER" />
+      &lt;/intent-filter>
+    &lt;/activity>
+
+    &lt;activity android:name=".MainActivity">&lt;/activity>
+
+  &lt;/application>
+&lt;/manifest></pre>
+      <h2>04-2 여러 화면 만들고 화면 간 전환하기</h2>
+      <h2>04-3 Intent 살펴보기</h2>
+      <h4>Intent의 역할과 사용 방식</h4>
+      <h4>Category</h4>
+      <h4>Type</h4>
+      <h4>Component</h4>
+      <h4>부가(Extra) Data</h4>
+      <h2>04-4 Flag와 Extra Data 사용하기</h2>
+      <h4>Flag</h4>
+      <h4>Extra Data</h4>
+      <h2>04-5 Task 관리 이해하기</h2>
+      <h4>Process와 Task</h4>
+      <h2>04-6 Activity의 수명주기(Life cycle)와 SharedPreferences 이해하기</h2>
+      <h1><span class="chapter-number">05</span><span class="chapter-title">Fragment 이해하기</span></h1>
+
+
+
+
+
+
+
+
+
+
+
 
 
 
