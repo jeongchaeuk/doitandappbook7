@@ -11,7 +11,7 @@
     table,
     th,
     td {
-      padding: 2px 5px;
+      padding: 0rem .5rem;
       border: 1px solid black;
       border-collapse: collapse;
     }
@@ -55,14 +55,23 @@
       margin-top: .2rem;
     }
 
+    li {
+      line-height: 1.3rem;
+    }
+
     pre {
-      margin: .25rem 1rem;
+      margin: .25rem;
       border-radius: .5rem;
-      padding: .25rem .5rem;
+      padding: .25rem;
       font-size: .9rem;
       background-color: #242;
       color: whitesmoke;
       width: fit-content;
+    }
+
+    .no-bg {
+      background-color: transparent;
+      color: black;
     }
 
     .float {
@@ -87,6 +96,10 @@
       color: orange;
       border-radius: .5rem;
       padding: .1rem .5rem;
+    }
+
+    caption {
+      margin-top: .25rem;
     }
   </style>
 </head>
@@ -1448,15 +1461,427 @@ class MenuActivity : AppCompatActivity() {
   &lt;/application>
 &lt;/manifest></pre>
       <h2>04-2 여러 화면 만들고 화면 간 전환하기</h2>
+      <h4>Android App을 구성하는 4가지 요소</h4>
+      <ul>
+        <li>Activity</li>
+        <li>Service</li>
+        <li>Broadcast Receiver</li>
+        <li>Content Provider</li>
+      </ul>
+      App을 만들어 단말기에 설치했을 때 Android system이 이 요소들에 대한 정보를 요구한다.<br>
+      이 정보는 <span class="my-strong">AndroidManifest.xml</span>에 담겨 있다.<br><br>
+      <ul>
+        <li>화면은 Activity로 구현한다.</li>
+        <li>
+          <table>
+            <caption>새 activity를 표시하는 방법</caption>
+            <tr>
+              <th>method</th>
+              <th>설명</th>
+            </tr>
+            <tr>
+              <td>
+                <pre class="no-bg">
+open fun startActivity(intent: Intent!): Unit</pre>
+              </td>
+              <td>새 Activity를 화면에 표시한다.</td>
+            </tr>
+            <tr>
+              <td>
+                <pre class="no-bg">
+open fun startActivityForResult(
+    intent: Intent!,
+    requestCode: Int
+): Unit</pre>
+              </td>
+              <td>새 Activity를 화면에 표시하고 그 응답을 받아 처리한다.<br>
+                requestCode는 일반적으로 각각의 Activity를 구별하기 위해 사용된다.
+              </td>
+            </tr>
+          </table>
+          MainActivity.kt
+          <pre>
+package com.xxx.sample
+
+import android.content.Intent
+import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.xxx.sample.databinding.ActivityMainBinding
+
+class MainActivity : AppCompatActivity() {
+  private lateinit var binding: ActivityMainBinding
+
+  companion object {
+      const val REQUEST_CODE_MENU = 101
+  }
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+    binding = ActivityMainBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
+    binding.button.setOnClickListener {
+        val intent = Intent(applicationContext, MenuActivity::class.java)
+        startActivityForResult(intent, REQUEST_CODE_MENU)
+    }
+  }
+}</pre>
+        </li>
+        <li>
+          <table>
+            <caption>응답 결과를 보내는 방법</caption>
+            <tr>
+              <th>method</th>
+              <th>설명</th>
+            </tr>
+            <tr>
+              <td>
+                <pre class="no-bg">
+fun setResult(
+  resultCode: Int, 
+  data: Intent!
+): Unit</pre>
+              </td>
+              <td>새 Activity에서 이전 Activity -호출자(caller)-로 intent를 사용해 extra data를 전달한다.</td>
+            </tr>
+          </table>
+          MenuActivity.kt
+          <pre>
+package com.xxx.sample
+
+import android.content.Intent
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.xxx.sample.databinding.ActivityMenuBinding
+
+class MenuActivity : AppCompatActivity() {
+  private lateinit var binding: ActivityMenuBinding
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+    binding = ActivityMenuBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
+    binding.button.setOnClickListener {
+      // 'name' 이름의 extra data를 만든다.
+      val intent = Intent().putExtra("name", "peter")
+      // 응답을 보낸다.
+      setResult(RESULT_OK, intent)
+      // 현재 activity를 닫는다.
+      finish()
+    }
+  }
+}
+</pre>
+        </li>
+        <li>
+          <table>
+            <caption>응답을 받아 처리하는 방법</caption>
+            <tr>
+              <th>method</th>
+              <th>설명</th>
+            </tr>
+            <tr>
+              <td>
+                <pre class="no-bg">
+protected open fun onActivityResult(
+  requestCode: Int, // startActivityForResult()에 전달한 값. 응답한 Activity를 구별하기위해 사용된다.
+  resultCode: Int, // 전달 받은 응답 코드 값.
+  data: Intent!   // 전달 받은 extra data.
+): Unit</pre>
+              </td>
+              <td>새로 연 Activity가 종료되었을 때 호출된다.</td>
+            </tr>
+          </table>
+          MainActivity.kt
+          <pre>
+  ...
+class MainActivity : AppCompatActivity() {
+  ...
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+
+    val request = when (requestCode) {
+      REQUEST_CODE_MENU -> {
+        val result = when (resultCode) {
+          RESULT_OK -> {
+            val value = data?.getStringExtra("name") ?: "no data"
+            "응답으로 전달된 name=${value}"
+          }
+          else -> {
+            "Unknown result code"
+          }
+        }
+
+        Toast.makeText(this, result, Toast.LENGTH_LONG).show()
+
+        "requestCode=${requestCode}, resultCode=${resultCode}"
+      }
+      else -> {
+        "Unknown request code"
+      }
+    }
+
+    Toast.makeText(this, request, Toast.LENGTH_LONG).show()
+  }
+  ...
+}</pre>
+        </li>
+      </ul>
+      <h4>정리</h4>
+      <table>
+        <tr>
+          <th>과정</th>
+          <th>설명</th>
+        </tr>
+        <tr>
+          <td>새 Activity 만들기</td>
+          <td>새 Activity를 추가하면 XML layout file 하나와 source file 하나가 만들어진다.<br>Manifest file에 Activity tag가 추가된다.</td>
+        </tr>
+        <tr>
+          <td>새 Activity의 XML layout 정의하기</td>
+          <td>새로 만들어진 XML layout을 수정하여 새 Activity의 화면이 어떻게 배치될지를 작성한다.</td>
+        </tr>
+        <tr>
+          <td>Main Activity에서 새 Activity 호출하기</td>
+          <td><span class="my-strong">startActivityForResult()</span>로 새 Activity를 호출한다.</td>
+        </tr>
+        <tr>
+          <td>새 Activity에서 응답 보내기</td>
+          <td><span class="my-strong">setResult()</span>로 응답을 보낸다.</td>
+        </tr>
+        <tr>
+          <td>응답 처리하기</td>
+          <td><span class="my-strong">onActivityResult()</span>를 재정의하여 새 Activity에서 보낸 응답을 처리한다.</td>
+        </tr>
+      </table>
       <h2>04-3 Intent 살펴보기</h2>
       <h4>Intent의 역할과 사용 방식</h4>
-      <h4>Category</h4>
-      <h4>Type</h4>
-      <h4>Component</h4>
-      <h4>부가(Extra) Data</h4>
+      <ul>
+        <li>android.content.Intent는 App 구성 요소간에 작업 수행을 위한 정보를 전달하는 역할을 한다.</li>
+        <li>Intent를 전달할 수 있는 대표적인 method
+          <ul>
+            <li>startActivity(), startActivityForResult()</li>
+            <li>startService(), bindService()</li>
+            <li>broadcastIntent()</li>
+          </ul>
+        </li>
+        <li>Intent의 기본 구성 요소
+          <ul>
+            <li>Action : 수행할 기능</li>
+            <li>Data : action이 수행될 대상의 data</li>
+            <li>
+              <table>
+                <cation>예시</cation>
+                <tr>
+                  <th>Action</th>
+                  <th>Data</th>
+                  <th>설명</th>
+                </tr>
+                <tr>
+                  <td>ACTION_DIAL</td>
+                  <td>tel:010-1234-1234</td>
+                  <td>주어진 전화번호를 이용해 전화걸기 화면을 보여준다.</td>
+                </tr>
+                <tr>
+                  <td>ACTION_VIEW</td>
+                  <td>tel:010-1234-1234</td>
+                  <td>주어진 전화번호를 이용해 전화걸기 화면을 보여준다.<br>URI 값의 유형에 따라 VIEW action이 다른 기능을 수행한다.</td>
+                </tr>
+                <tr>
+                  <td>ACTION_EDIT</td>
+                  <td>content://contacts/people/2</td>
+                  <td>전화번호부 database에 있는 정보 중에서 id 값이 2인 정보를 편집하기 위한 화면을 보여준다.</td>
+                </tr>
+                <tr>
+                  <td>ACTION_VIEW</td>
+                  <td>content://contacts/people</td>
+                  <td>전화번호부 database의 내용을 보여준다.</td>
+                </tr>
+              </table>
+            </li>
+            <li>Data는 그 형식이 (MIME type) 어떤 것인가를 system이 확인한 후 적절한 Activity를 자동으로 찾아 보여주기도 한다.</li>
+          </ul>
+        </li>
+        <li>android.content.Intent 생성자
+          <table>
+            <tr>
+              <th>생성자</th>
+              <th>설명</th>
+            </tr>
+            <tr>
+              <td>
+                <pre class="no-bg">Intent()</pre>
+              </td>
+              <td>빈 객체를 만든다.</td>
+            </tr>
+            <tr>
+              <td>
+                <pre class="no-bg">Intent(o: Intent!)</pre>
+              </td>
+              <td>복사 생성자</td>
+            </tr>
+            <tr>
+              <td>
+                <pre class="no-bg">Intent(action: String!)</pre>
+              </td>
+              <td>주어진 action으로 객체를 만든다. 다른 fields(data, type, class)는 null 이다.</td>
+            </tr>
+            <tr>
+              <td>
+                <pre class="no-bg">Intent(action: String!, uri: Uri!)</pre>
+              </td>
+              <td>주어진 action과 주어진 data uri로 객체를 만든다.</td>
+            </tr>
+            <tr>
+              <td>
+                <pre class="no-bg">
+Intent(
+  packageContext: Context!, 
+  cls: Class&lt;*>!)</pre>
+              </td>
+              <td>component를 위한 intent를 만든다. 다른 field(action, data, type, class)는 null이고 나중에 변경될 수 있다.<br>
+                cls는 intent를 위해 사용될 component class 이름이다.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <pre class="no-bg">
+Intent(
+  action: String!, 
+  uri: Uri!, 
+  packageContext: Context!, 
+  cls: Class&lt;*>!)</pre>
+              </td>
+              <td>action과 data로 component를 위한 intent를 만든다.</td>
+            </tr>
+          </table>
+        </li>
+        <li>종류
+          <ul>
+            <li>명시적(Explicit) Intent : Intent에 class 객체나 component 이름을 지정하여 호출할 대상을 확실히 알 수 있는 경우.</li>
+            <li>암시적(Implicit) Intent : action, data를 지정하긴 했지만 호출할 대상이 달라질 수 있는 경우.
+              <ul>
+                <li>MIME 형식에 따라 system에서 적절한 다른 app의 activity를 찾은 후 표시하는 방식을 사용한다.</li>
+                <li>
+                  <table>
+                    <tr>
+                      <th>속성</th>
+                      <th>설명</th>
+                    </tr>
+                    <tr>
+                      <td>Category</td>
+                      <td>action이 실행되는 데 필요한 추가적인 정보를 제공한다.<br>예) CATEGORY_LAUNCHER : <br>
+                        최상위 app으로 설치된 app들의 목록을 보여주는 application launcher 화면에 이 app을 보여주어야 한다는 것을 의미한다.</td>
+                    </tr>
+                    <tr>
+                      <td>Type</td>
+                      <td>data의 MIME 형식을 명시적으로 지정한다.</td>
+                    </tr>
+                    <tr>
+                      <td>Component</td>
+                      <td>intent에 사용될 component class 이름을 명시적으로 지정한다.</td>
+                    </tr>
+                    <tr>
+                      <td>Extra data</td>
+                      <td>intent는 추가적인 정보를 넣을 수 있도록 Bundle 객체를 담고 있다.<br>
+                        이 객체를 통해 intent 안에 더 많은 정보를 넣어 다른 app 구성 요소에 전달할 수 있다.</td>
+                    </tr>
+                  </table>
+                  <pre>
+// 암시적
+binding.button.setOnClickListener {
+  val data = binding.editText.text.toString() // "tel:010-1000-1000"
+  val intent = Intent(Intent.ACTION_VIEW, Uri.parse(data))
+  startActivity(intent)
+}</pre>
+                  <pre>
+// 명시적
+binding.button2.setOnClickListener {
+  // 방법 1.
+  startActivityForResult(Intent(applicationContext, MenuActivity::class.java), REQUEST_CODE_MENU)
+
+  // 방법 2.
+  val intent = Intent()
+  intent.component = ComponentName("com.xxx.sample", "com.xxx.sample.MenuActivity")
+  startActivityForResult(intent, REQUEST_CODE_MENU)
+}</pre>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
       <h2>04-4 Flag와 Extra Data 사용하기</h2>
+      Activity에 intent를 중복해서 만들면 같은 activity가 중복해서 만들어진다.<br>이런 문제는 Flag를 사용해 조정할 수 있다.
       <h4>Flag</h4>
-      <h4>Extra Data</h4>
+      <ul>
+        <li>Activity는 ActivityManager라는 객체에 의해 Activity Stack이라는 것으로 관리된다.</li>
+        <li>이 stack는 activity를 차곡차곡 쌓아두었다가 가장 상위에 있던 activity가 없어지면 이전의 activity가 다시 화면에 보이게 된다.</li>
+        <li>즉, 동일한 activity를 여러번 실행하면 같은 activity가 여러개 stack에 들어가게 되고 동시에 data를 여러 번 접근하거나 resource를 여러 번 사용하는 문제가 발생할 수 있다.</li>
+        <li>대표적인 Flag
+          <table>
+            <tr>
+              <th>flag</th>
+              <th>설명</th>
+            </tr>
+            <tr>
+              <td>FLAG_ACTIVITY_SINGLE_TOP</td>
+              <td>activity를 만들 때 이미 만들어진게 있으면 그것을 사용한다.<br>
+                <ul>
+                  <figcaption>받은 Intent 객체를 참조하는 방법</figcaption>
+                  <li>새 activity가 만들어진 경우<br><span class="my-strong">onCreate()</span> 안에서 <span class="my-strong">getIntent()</span>로 참조할 수 있다.</li>
+                  <li>기존 activity를 사용하는 경우<br><span class="my-strong">onNewIntent()</span>를 재정의해서 참조할 수 있다.<br>
+                    <pre class="no-bg">protected open fun onNewIntent(intent: Intent!): Unit</pre>
+                    activity가 이미 memory에 객체로 만들어져 있다면 activity를 다시 표시하더라도 onCreate()가 호출되지 않는다.
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <td>FLAG_ACTIVITY_NO_HISTORY</td>
+              <td>activity가 stack에 추가되지 않는다. 일회성 activity에 사용된다.</td>
+            </tr>
+            <tr>
+              <td>FLAG_ACTIVITY_CLEAR_TOP</td>
+              <td>이 activity 위에 있는 모든 activity를 종료 시킨다.</td>
+            </tr>
+          </table>
+        </li>
+      </ul>
+      <h4>부가(Extra) Data</h4>
+      <ul>
+        <li>Intent 안에는 Bundle 객체가 들어 있는데, putExtra(), get{data type}Extra()로 extra data를 넣거나 빼낼 수 있다.</li>
+        <li>기본 자료형, byte 배열, Serializable 객체를 다룰 수 있다.</li>
+        <li>extra data를 (key, value) 쌍으로 처리한다.</li>
+        <li>get{data type}Extra()는 data 값이 없으면 defaultValue 값이 반환된다.</li>
+        <li>객체 data는 byte 배열로 변환하거나 Serializable interface를 구현한 객체를 만들어 직렬화한 다음 전달해야 한다.</li>
+        <li>Android는 Serializable interface와 유사한 <span class="my-strong">Parcelable</span> interface를 권장한다.
+          <table>
+            <tr>
+              <th>구현해야 할 것들</th>
+              <th>설명</th>
+            </tr>
+            <tr>
+              <td><pre class="no-bg">abstract fun describeContents(): Int</td>
+              <td>직렬화하려는 객체의 유형을 구분할 때 사용한다.</td>
+            </tr>
+            <tr>
+              <td><pre class="no-bg">
+abstract fun writeToParcel(dest: Parcel!, flags: Int): Unit</pre></td>
+              <td>객체가 가지고 있는 data를 Parcel 객체로 만들어 준다.</td>
+            </tr>
+            <tr>
+              <td>CREATOR 상수</td>
+              <td>Parcel 객체로부터 data를 읽어서 객체를 생성하는 역할을 한다.</td>
+            </tr>
+          </table>
+          </ul>
+        </li>
+      </ul>
       <h2>04-5 Task 관리 이해하기</h2>
       <h4>Process와 Task</h4>
       <h2>04-6 Activity의 수명주기(Life cycle)와 SharedPreferences 이해하기</h2>
