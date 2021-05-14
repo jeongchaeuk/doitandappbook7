@@ -62,7 +62,7 @@
     pre {
       margin: .25rem;
       border-radius: .5rem;
-      padding: .25rem;
+      padding: .25rem .5rem;
       font-size: .9rem;
       background-color: #242;
       color: whitesmoke;
@@ -386,7 +386,18 @@ class MainActivity2 : AppCompatActivity() {
       source 에서 view을 찾는 방법
       <ul>
         <li>findViewById</li>
-        <li>view binding</li>
+        <li>view binding
+          <pre>
+// build.gradle(Module)
+android {
+...          
+  // 추가
+  buildFeatures {
+      viewBinding true
+  }
+...
+}</pre>
+        </li>
       </ul>
       <h2>02-6 ScrollView</h2>
       <ul>
@@ -1866,12 +1877,14 @@ binding.button2.setOnClickListener {
               <th>설명</th>
             </tr>
             <tr>
-              <td><pre class="no-bg">abstract fun describeContents(): Int</td>
+              <td>
+                <pre class="no-bg">abstract fun describeContents(): Int</td>
               <td>직렬화하려는 객체의 유형을 구분할 때 사용한다.</td>
             </tr>
             <tr>
               <td><pre class="no-bg">
-abstract fun writeToParcel(dest: Parcel!, flags: Int): Unit</pre></td>
+abstract fun writeToParcel(dest: Parcel!, flags: Int): Unit</pre>
+              </td>
               <td>객체가 가지고 있는 data를 Parcel 객체로 만들어 준다.</td>
             </tr>
             <tr>
@@ -1879,11 +1892,158 @@ abstract fun writeToParcel(dest: Parcel!, flags: Int): Unit</pre></td>
               <td>Parcel 객체로부터 data를 읽어서 객체를 생성하는 역할을 한다.</td>
             </tr>
           </table>
-          </ul>
-        </li>
       </ul>
+      </li>
+      </ul>
+      build.gradle(Module)
+      <pre>
+plugins {
+  ...
+  // @Parcelize를 사용하기 위한 plug-in 추가.
+  <span class="my-strong">id 'kotlin-parcelize'</span> 
+}</pre><br>
+      SimpleData.kt
+      <pre>
+package com.xxx.sampleparcelable
+
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+// @Parcelize는 Kotlin compiler에게 writeToParcel(), describeContents(), CREATOR를 자동으로 만들게 한다.
+<span class="my-strong">@Parcelize</span>
+class SimpleData(var number: Int, var message: String): Parcelable</pre><br>
+MainActivity.kt
+<pre>
+package com.xxx.sampleparcelable
+
+import android.content.Intent
+import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.xxx.sampleparcelable.databinding.ActivityMainBinding
+
+class MainActivity : AppCompatActivity() {
+  private lateinit var binding: ActivityMainBinding
+
+  companion object {
+    const val REQUEST_CODE = 100
+    const val KEY_SIMPLE_DATA = "data"
+  }
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+    binding = ActivityMainBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
+    binding.button.setOnClickListener {
+      val intent = Intent(applicationContext, MenuActivity::class.java)
+      intent.putExtra(KEY_SIMPLE_DATA, SimpleData(100, "Hello Android!"))
+      startActivityForResult(intent, REQUEST_CODE)
+    }
+  }
+
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+
+    val result = data?.getStringExtra("name") ?: "no data"
+
+    Toast.makeText(applicationContext, "$requestCode, $resultCode, $result", Toast.LENGTH_SHORT).show()
+  }
+}</pre><br>
+/res/layout/activity_main.xml
+<pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:gravity="center"
+  android:orientation="vertical"
+  android:padding="5dp"
+  tools:context=".MainActivity">
+
+  &lt;Button
+    android:id="@+id/button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="메뉴 화면 표시하기"
+    android:textSize="24sp" />
+&lt;/LinearLayout>
+</pre><br>
+MenuActivity.kt
+<pre>
+package com.xxx.sampleparcelable
+
+import android.content.Intent
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.xxx.sampleparcelable.databinding.ActivityMenuBinding
+
+class MenuActivity : AppCompatActivity() {
+  private lateinit var binding: ActivityMenuBinding
+
+  companion object {
+    const val KEY_SIMPLE_DATA = "data"
+  }
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+    binding = ActivityMenuBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
+    val data = intent.getParcelableExtra<SimpleData>(KEY_SIMPLE_DATA)
+    binding.textView.text = ("전달받은 Data\n" +
+      if (data != null)
+        "number=${data.number}\nmessage=${data.message}"
+      else
+        "no data!")
+
+    binding.buttonExit.setOnClickListener {
+      val intent = Intent()
+      intent.putExtra("name", "peter")
+      setResult(RESULT_OK, intent)
+      finish()
+    }
+  }
+}</pre><br>
+/res/layout/activity_menu.xml
+<pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:gravity="center"
+  android:orientation="vertical"
+  android:padding="5dp"
+  tools:context=".MenuActivity">
+
+  &lt;TextView
+    android:id="@+id/textView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:text="전달받은 데이터"
+    android:textSize="24sp" />
+
+    &lt;Button
+    android:id="@+id/buttonExit"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="50dp"
+    android:text="돌아가기"
+    android:textSize="24sp" />
+&lt;/LinearLayout></pre>
       <h2>04-5 Task 관리 이해하기</h2>
+      Task를 이용하면 Process처럼 독립적인 실행 단위와 상관없이 어떤 화면들이 같이 동작해야 하는지 흐름을 관리할 수 있다.
       <h4>Process와 Task</h4>
+      AndroidManifest.xml에 activity를 등록할 때 Task도 함께 설정할 수 있다.
       <h2>04-6 Activity의 수명주기(Life cycle)와 SharedPreferences 이해하기</h2>
       <h1><span class="chapter-number">05</span><span class="chapter-title">Fragment 이해하기</span></h1>
 
