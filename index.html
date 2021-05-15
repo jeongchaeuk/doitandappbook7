@@ -16,6 +16,15 @@
       border-collapse: collapse;
     }
 
+    .table-no-border {
+      border: 0px solid black;
+      border-collapse: separate;
+    }
+
+    .no-border {
+      border: 0px solid black;
+    }
+
     th {
       background-color: lightgray;
       text-align: center;
@@ -52,7 +61,7 @@
     }
 
     ul {
-      margin-top: .2rem;
+      margin: .25rem 0rem;
     }
 
     li {
@@ -1912,8 +1921,8 @@ import kotlinx.parcelize.Parcelize
 // @Parcelize는 Kotlin compiler에게 writeToParcel(), describeContents(), CREATOR를 자동으로 만들게 한다.
 <span class="my-strong">@Parcelize</span>
 class SimpleData(var number: Int, var message: String): Parcelable</pre><br>
-MainActivity.kt
-<pre>
+      MainActivity.kt
+      <pre>
 package com.xxx.sampleparcelable
 
 import android.content.Intent
@@ -1951,8 +1960,8 @@ class MainActivity : AppCompatActivity() {
     Toast.makeText(applicationContext, "$requestCode, $resultCode, $result", Toast.LENGTH_SHORT).show()
   }
 }</pre><br>
-/res/layout/activity_main.xml
-<pre>
+      /res/layout/activity_main.xml
+      <pre>
 &lt;?xml version="1.0" encoding="utf-8"?>
 &lt;LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
@@ -1973,8 +1982,8 @@ class MainActivity : AppCompatActivity() {
     android:textSize="24sp" />
 &lt;/LinearLayout>
 </pre><br>
-MenuActivity.kt
-<pre>
+      MenuActivity.kt
+      <pre>
 package com.xxx.sampleparcelable
 
 import android.content.Intent
@@ -2010,8 +2019,8 @@ class MenuActivity : AppCompatActivity() {
     }
   }
 }</pre><br>
-/res/layout/activity_menu.xml
-<pre>
+      /res/layout/activity_menu.xml
+      <pre>
 &lt;?xml version="1.0" encoding="utf-8"?>
 &lt;LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
@@ -2042,9 +2051,301 @@ class MenuActivity : AppCompatActivity() {
 &lt;/LinearLayout></pre>
       <h2>04-5 Task 관리 이해하기</h2>
       Task를 이용하면 Process처럼 독립적인 실행 단위와 상관없이 어떤 화면들이 같이 동작해야 하는지 흐름을 관리할 수 있다.
+      <table class="table-no-border" style="text-align: center;">
+        <tr>
+          <th class="no-border" colspan="3">Task</th>
+        </tr>
+        <tr>
+          <td style="background-color: aquamarine;">Activity #1</td>
+          <td class="no-border">-------------&gt;</td>
+          <td style="background-color: bisque;">Activity #2</td>
+        </tr>
+        <tr>
+          <td class="no-border" colspan="3">&nbsp;</td>
+        </tr>
+        <tr>
+          <th class="no-border" colspan="3">Process</th>
+        </tr>
+        <tr>
+          <td style="background-color: aquamarine;">Activity #1</td>
+          <td class="no-border" rowspan="4"></td>
+          <td style="background-color: bisque;">Activty #2</td>
+        </tr>
+        <tr>
+          <td style="background-color: aquamarine;">VM</td>
+          <td style="background-color: bisque;">VM</td>
+        </tr>
+        <tr>
+          <td style="background-color: aquamarine;">Process #1</td>
+          <td style="background-color: bisque;">Process #2</td>
+        </tr>
+        <tr>
+          <th>사용자 App</th>
+          <th>다른 App</th>
+        </tr>
+      </table>
       <h4>Process와 Task</h4>
       AndroidManifest.xml에 activity를 등록할 때 Task도 함께 설정할 수 있다.
+      <table>
+        <tr>
+          <th>launchMode</th>
+          <th>설명</th>
+        </tr>
+        <tr>
+          <td>standard</td>
+          <td>기본값. Task가 새 activity를 stack에 차곡차곡 저장한다.</td>
+        </tr>
+        <tr>
+          <td>singleTop</td>
+          <td>FLAG_ACTIVITY_SINGLE_TOP과 같다.<br>
+            이미 실행중인 activity가 있다면 그것을 사용한다.</td>
+        </tr>
+        <tr>
+          <td>singleTask</td>
+          <td>activity가 실행될 때 새 task를 만든다.</td>
+        </tr>
+        <tr>
+          <td>singleInstance</td>
+          <td>activity가 실행될 때 새 task를 만들고, 이후에 만들어지는 activity들은 이 task를 공유하지 않게 한다.</td>
+        </tr>
+      </table>
+      <pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;manifest
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.xxx.sampletask">
+
+  &lt;application
+    android:allowBackup="true"
+    android:icon="@mipmap/ic_launcher"
+    android:label="@string/app_name"
+    android:roundIcon="@mipmap/ic_launcher_round"
+    android:supportsRtl="true"
+    android:theme="@style/Theme.SampleTask">
+    &lt;activity
+      android:name=".MainActivity"
+      <span class="my-strong">android:launchMode="singleTop"</span>>
+      &lt;intent-filter>
+        &lt;action android:name="android.intent.action.MAIN" />
+        &lt;category android:name="android.intent.category.LAUNCHER" />
+      &lt;/intent-filter>
+    &lt;/activity>
+  &lt;/application>
+&lt;/manifest></pre>
       <h2>04-6 Activity의 수명주기(Life cycle)와 SharedPreferences 이해하기</h2>
+      <table>
+        <caption>Activity의 대표적인 상태 정보</caption>
+        <tr>
+          <th>상태</th>
+          <th>설명</th>
+        </tr>
+        <tr>
+          <td>실행 (Running)</td>
+          <td>화면상에 activity가 보이면서 실행되어 있는 상태.<br>activity stack의 최상위에 있으며 focus를 가지고 있다.</td>
+        </tr>
+        <tr>
+          <td>일시정지 (Paused)</td>
+          <td>사용자에게 보이지만 다른 activity가 위에 있어 focus를 받지 못한 상태.<br>대화상자가 위에 있어 일부가 가려진 경우에 해당한다.</td>
+        </tr>
+        <tr>
+          <td>중지 (Stopped)</td>
+          <td>다른 activity에 의해 완전히 가려져 보이지 않는 상태.</td>
+        </tr>
+      </table>
+      <ul>
+        <li>activity의 상태 정보가 변화하는 것을 activity의 수명주기 또는 생명주기라고 한다.</li>
+        <li>상태가 변화하면서 각각에 해당하는 method가 system에 의해 자동으로 호출된다. (Callback Method)</li>
+      </ul>
+      <img src="activity_lifecycle.png" width="523" height="663" alt="activity_lifecycle.png" />
+      <table>
+        <caption>Activity의 상태 method</caption>
+        <tr>
+          <th>method</th>
+          <th>설명</th>
+        </tr>
+        <tr>
+          <td>onCreate()</td>
+          <td>
+            <ul>
+              <li>Activity가 처음에 만들어졌을 때 호출된다.</li>
+              <li>화면에 보이는 view들의 일반적인 상태를 설정하는 부분.</li>
+              <li>이전 상태가 저장되어 있는 경우에는 Bundle 객체를 참조해 이전 상태 복원 가능.</li>
+              <li>다음에는 항상 onStart()가 호출된다.</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>onStart()</td>
+          <td>
+            <ul>
+              <li>Activity가 화면에 보이기 바로 전에 호출된다.</li>
+              <li>Activity가 화면 상에 보이면 다음에 onResume()이 호출된다.</li>
+              <li>Activity가 화면에서 가려지게 되면 다음에 onStop()이 호출된다.</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>onResume()</td>
+          <td>
+            <ul>
+              <li>Activity가 사용자와 상호작용하기 바로 전에 호출된다.</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>onRestart()</td>
+          <td>
+            <ul>
+              <li>Activity가 중지된 이후에 호출되는 method로 다시 시작하기 바로 전에 호출된다.</li>
+              <li>다음에는 항상 onStart()가 호출된다.</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>onPause()</td>
+          <td>
+            <ul>
+              <li>또 다른 Activity를 시작하려고 할 때 호출된다.</li>
+              <li>저장되지 않은 data를 저장소에 저장하거나 animation 중인 작업을 중지하는 등의 기능을 수행한다.</li>
+              <li>이 method가 return되기 전에는 다음 activity가 시작될 수 없으므로 이 작업은 매우 빨리 수행된 후 return 되어야 한다.</li>
+              <li>Activity가 이 상태에 들어가면 system은 activity를 강제로 종료할 수 있다.</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>onStop()</td>
+          <td>
+            <ul>
+              <li>Activity가 사용자에게 더 이상 보이지 않을 때 호출된다.</li>
+              <li>Activity가 소멸되거나 또 다른 activity가 화면을 가릴 때 호출된다.</li>
+              <li>Activity가 이 상태에 들어가면 system은 activity를 강제로 종료할 수 있다.</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>onDestroy()</td>
+          <td>
+            <ul>
+              <li>Activity가 소멸되어 없어지기 전에 호출된다.</li>
+              <li>이 method는 activity가 받는 마지막 호출이 된다.</li>
+              <li>Activity가 app에 의해 종료되거나(finish() method 호출) system이 강제로 종료시키는 경우에 호출될 수 있다.</li>
+              <li>위의 2가지 경우를 구분할 때 isFinishing() method를 이용한다.</li>
+              <li>Activity가 이 상태에 들어가면 system은 activity를 강제로 종료할 수 있다.</li>
+            </ul>
+          </td>
+        </tr>
+      </table>
+      <h4>App 상태 저장 및 복원</h4>
+      <table>
+        <tr>
+          <td>onPause()</td>
+          <td rowspan="2">이 두가지 method는 app이 멈추거나 없어질 때,<br>app이 다시 보이거나 새로 실행될 때 호출되므로 이 method를 구현해 app의 상태를 저장하거나 복원한다.</td>
+        </tr>
+        <tr>
+          <td>onResume()</td>
+        </tr>
+        <tr>
+          <td>onSaveInstanceState()</td>
+          <td>Activity를 중지시키기 전에 호출된다. 여기서 data를 임시로 저장할 수 있다.</td>
+        </tr>
+        <tr>
+          <td>onCreate()<br>onRestoreInstanceState()</td>
+          <td>저장한 data를 읽어온다.</td>
+        </tr>
+      </table>
+      <h4>SharedPreferences</h4>
+      <ul>
+        <li>App 안에서 간단한 data를 저장하거나 복원할 때 사용한다.</li>
+        <li>App 내부에 file을 만든다.</li>
+        <li>개발자는 실제로 file을 만들 필요 없이 SharedPreferences의 저장, 복원 method를 이용한다.</li>
+      </ul>
+      <pre>
+package com.xxx.samplelifecycle
+
+import android.app.Activity
+import android.content.Intent
+import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.xxx.samplelifecycle.databinding.ActivityMainBinding
+
+class MainActivity : AppCompatActivity() {
+  private lateinit var binding: ActivityMainBinding
+
+  companion object {
+    const val STORAGE_NAME = "pref"
+    const val DATA_KEY = "name"
+  }
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+    binding = ActivityMainBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
+    binding.button.setOnClickListener {
+      startActivity(Intent(applicationContext, MenuActivity::class.java))
+    }
+
+    showToast("onCreate")
+  }
+
+  private fun showToast(text: String) {
+    Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+    Log.d("Main", text)
+  }
+
+  override fun onResume() {
+    super.onResume()
+
+    loadState()
+    showToast("onResume")
+  }
+
+  override fun onPause() {
+    super.onPause()
+
+    saveState()
+    showToast("onPause")
+  }
+
+  private fun clearState() {
+    getSharedPreferences(STORAGE_NAME, Activity.MODE_PRIVATE)
+      .edit()
+      .clear()
+      .commit()
+  }
+
+  private fun saveState() {
+    getSharedPreferences(STORAGE_NAME, Activity.MODE_PRIVATE)
+      .edit()
+      .putString(DATA_KEY, binding.editTextName.text.toString())
+      .commit()
+  }
+
+  private fun loadState() {
+    binding.editTextName.setText(
+      try {
+        getSharedPreferences(STORAGE_NAME, Activity.MODE_PRIVATE)
+          .getString(DATA_KEY, "")
+      } catch (e: ClassCastException) {""})
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+
+    showToast("onSaveInstanceState")
+  }
+
+  override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+    super.onRestoreInstanceState(savedInstanceState)
+
+    showToast("onRestoreInstanceState")
+  }
+}</pre>
+      
+
       <h1><span class="chapter-number">05</span><span class="chapter-title">Fragment 이해하기</span></h1>
 
 
