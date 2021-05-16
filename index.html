@@ -2409,7 +2409,9 @@ class MainActivity : AppCompatActivity() {
               <tr>
                 <td colspan="3" style="background-color: #faf;">Fragment Manager</td>
               </tr>
-              <tr><td class="no-border" colspan="3">Activity</td></tr>
+              <tr>
+                <td class="no-border" colspan="3">Activity</td>
+              </tr>
             </table>
           </td>
         </tr>
@@ -2423,64 +2425,86 @@ class MainActivity : AppCompatActivity() {
           <th>설명</th>
         </tr>
         <tr>
-          <td><pre class="no-bg">@Nullable fun getActivity(): FragmentActivity?</pre></td>
+          <td>
+            <pre class="no-bg">@Nullable fun getActivity(): FragmentActivity?</pre>
+          </td>
           <td>이 fragment를 포함하는 activity를 구한다. Context에 포함된 경우 null을 반환한다.</td>
         </tr>
         <tr>
-          <td><pre class="no-bg">
+          <td>
+            <pre class="no-bg">
 // androidx.fragment.app.Fragment
-@NonNull fun getParentFragmentManager(): FragmentManager</pre></td>
+@NonNull fun getParentFragmentManager(): FragmentManager</pre>
+          </td>
           <td>이 fragment를 포함하는 activity에서 fragment 객체들과 의사소통하는 fragment manager를 구한다.</td>
         </tr>
         <tr>
-          <td><pre class="no-bg">
+          <td>
+            <pre class="no-bg">
 // androidx.fragment.app.FragmentActivity
-@NonNull open fun getSupportFragmentManager(): FragmentManager</pre></td>
+@NonNull open fun getSupportFragmentManager(): FragmentManager</pre>
+          </td>
           <td>이 fragment를 포함하는 activity에서 fragment 객체들과 의사소통하는 fragment manager를 구한다.</td>
         </tr>
         <tr>
-          <td><pre class="no-bg">@Nullable fun getParentFragment(): Fragment?</pre></td>
+          <td>
+            <pre class="no-bg">@Nullable fun getParentFragment(): Fragment?</pre>
+          </td>
           <td>부모 fragment를 구한다. 부모가 activity이면 null 이다.</td>
         </tr>
         <tr>
-          <td><pre class="no-bg">fun getId(): Int</pre></td>
+          <td>
+            <pre class="no-bg">fun getId(): Int</pre>
+          </td>
           <td>이 fragment의 id를 구한다.</td>
         </tr>
         <tr>
-          <td><pre class="no-bg">
+          <td>
+            <pre class="no-bg">
 @MainThread @Nullable open fun onCreateView(
   @NonNull inflater: LayoutInflater, 
   @Nullable container: ViewGroup?, 
   @Nullable savedInstanceState: Bundle?
-): View?</pre></td>
+): View?</pre>
+          </td>
           <td>Callback method. 여기서 inflation을 수행한다.</td>
         </tr>
       </table><br>
       <p>XML layout에 <span class="my-strong">&lt;fragment></span> tag를 사용해 추가하거나 FragmentManager의 add() method를 사용해 activity에 추가할 수 있다.</p>
       FragmentManager는 fragment를 activity에 추가(add), 다른 fragment로 바꾸거나(replace) 또는 삭제(remove)할 때 사용할 수 있다.<br>
-      <table><caption><a href="https://developer.android.com/reference/kotlin/androidx/fragment/app/FragmentManager" target="_blank">FragmentManager</a>의 주요 method 들</caption>
+      <table>
+        <caption><a href="https://developer.android.com/reference/kotlin/androidx/fragment/app/FragmentManager" target="_blank">FragmentManager</a>의 주요 method 들</caption>
         <tr>
           <th>method</th>
           <th>설명</th>
         </tr>
         <tr>
-          <td><pre class="no-bg">@NonNull open fun beginTransaction(): FragmentTransaction</pre></td>
+          <td>
+            <pre class="no-bg">@NonNull open fun beginTransaction(): FragmentTransaction</pre>
+          </td>
           <td>Fragment를 변경하기 위한 transaction을 시작한다.</td>
         </tr>
         <tr>
-          <td><pre class="no-bg">@Nullable open fun findFragmentById(@IdRes id: Int): Fragment?</pre></td>
+          <td>
+            <pre class="no-bg">@Nullable open fun findFragmentById(@IdRes id: Int): Fragment?</pre>
+          </td>
           <td>Id를 이용해 fragment를 찾는다.</td>
         </tr>
         <tr>
-          <td><pre class="no-bg">@Nullable open fun findFragmentByTag(@Nullable tag: String?): Fragment?</pre></td>
+          <td>
+            <pre class="no-bg">@Nullable open fun findFragmentByTag(@Nullable tag: String?): Fragment?</pre>
+          </td>
           <td>Tag 정보를 이용해 fragment를 찾는다.</td>
         </tr>
         <tr>
-          <td><pre class="no-bg">open fun executePendingTransactions(): Boolean</pre></td>
+          <td>
+            <pre class="no-bg">open fun executePendingTransactions(): Boolean</pre>
+          </td>
           <td>Transaction은 commit()을 호출하면 실행되지만 비동기(asynchronous) 방식으로 실행되므로 즉시 실행하고 싶다면 이 method를 추가로 호출해야 한다.</td>
         </tr>
       </table><br>
-      <table><caption>Fragment의 특성</caption>
+      <table>
+        <caption>Fragment의 특성</caption>
         <tr>
           <th>특성</th>
           <th>설명</th>
@@ -2495,8 +2519,120 @@ class MainActivity : AppCompatActivity() {
         </tr>
       </table>
       <h4>Fragment 만들어 화면에 추가하기</h4>
+      <pre>&lt;-- View class 추가 시 tag 추가 방법 예시 -->
+&lt;com.xxx.ui.view.MyView
+  android:layout_width="match_parent"
+  android:layout_height="match_parent" />
 
+&lt;-- Fragment class 추가 시 tag 추가 방법 예시 -->
+&lt;fragment
+  android:name="com.xxx.ui.fragment.MyFragment"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent" /></pre><br>
+      /res/layout/fragment_main.xml
+      <pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:gravity="center"
+  android:orientation="vertical"
+  tools:context=".MainFragment">
+
+  &lt;TextView
+    android:id="@+id/textView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="메인 프래그먼트"
+    android:textSize="30sp" />
+
+  &lt;Button
+    android:id="@+id/button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:text="메뉴 화면으로"
+    android:textSize="24sp" />
+&lt;/LinearLayout></pre><br>
+      /res/layout/activity_main.xml
+      <pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/container"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  tools:context=".MainActivity">
+
+  <span class="my-strong">&lt;fragment</span>
+    android:id="@+id/mainFragment"
+    <span class="my-strong">android:name="com.xxx.samplefragment.MainFragment"</span>
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+&lt;/LinearLayout></pre><br>
+      MainFragment.kt
+      <pre>
+package com.xxx.samplefragment
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import com.xxx.samplefragment.databinding.FragmentMainBinding
+
+class MainFragment : <span class="my-strong">Fragment()</span> {
+  private lateinit var binding: FragmentMainBinding
+
+  override fun onCreateView(
+    inflater: LayoutInflater, 
+    container: ViewGroup?,
+    savedInstanceState: Bundle?): View? {
+      binding = FragmentMainBinding.inflate(inflater, container, false)
+      return binding.root
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+
+    binding.button.setOnClickListener {
+      Toast.makeText(activity, binding.button.text, Toast.LENGTH_SHORT).show()
+    }
+  }
+}</pre>
       <h4>Button click 했을 때 code에서 fragment 추가하기</h4>
+      <table class="table-no-border" style="text-align: center;"><caption>Activity와 Fragment가 의사소통하는 방식</caption>
+        <tr>
+          <td class="no-border" colspan="2"></td>
+          <td class="no-border" colspan="3">(2) Transaction 시작<br>beginTransaction()</td>
+          <td class="no-border" colspan="2"></td>
+        </tr>
+        <tr>
+          <td style="border: 2px solid #33f">(1) Manager<br>참조하기<br>supportFragmentManager</td>
+          <td class="no-border">①<br>→</td>
+          <td class="no-border" style="background-color: #aaf;border-radius: 5px;box-shadow: 1px 1px 2px black;"></td>
+          <td class="no-border">②<br>→<br><br>④<br>←<br>(3)Transaction 실행<br>commit()</td>
+          <td class="no-border" style="background-color: #aaf;border-radius: 5px;box-shadow: 1px 1px 2px black;"></td>
+          <td class="no-border">③<br>→<br>추가<br>→<br>삭제<br>→<br>교체<br>→<br>...</td>
+          <td class="no-border" style="background-color: #ffa; border: 1px dashed #f00;"><span style="background-color: #33f;color:white; padding:5px">화면 #1</span></td>
+        </tr>
+        <tr>
+          <td class="no-border">Main Activity</td>
+          <td class="no-border"></td>
+          <td class="no-border">Fragment<br>Manager</td>
+          <td class="no-border"></td>
+          <td class="no-border">Transaction</td>
+          <td class="no-border"></td>
+          <td class="no-border">Fragment</td>
+        </tr>
+      </table>
+      
+
       <h4>Fragment의 수명주기</h4>
       <h2>05-2 Fragment로 화면 만들기</h2>
       <h2>05-3 ActionBar 사용하기</h2>
