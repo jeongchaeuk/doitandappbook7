@@ -54,6 +54,7 @@
       background-color: orange;
       color: black;
       padding: 5px;
+      margin-right: 5px;
     }
 
     h4 {
@@ -119,7 +120,7 @@
       arrow_circle_down
     </span>
   </a>
-  <h1><span class="chapter-number">01</span><span class="chapter-title">Android Studio와 친숙해지기</span></h1>
+  <h1 class="chapter-title"><span class="chapter-number">01</span>Android Studio와 친숙해지기</h1>
   <h2>01-3 레이아웃 기초 익히기</h2>
   <table>
     <tr>
@@ -182,7 +183,7 @@
   </table>
   * view에는 dp, 글자는 sp를 사용한다.<br>
   <p class="warning">주의) "app/src/main/res" folder에 file을 추가할 때 file 이름은 영어 소문자, 숫자, _ 기호로만 만들어야 하며, 첫 글자는 영문자로 시작해야 한다.</p>
-  <h1><span class="chapter-number">02</span><span class="chapter-title">Layout 익히기</span></h1>
+  <h1 class="chapter-title"><span class="chapter-number">02</span>Layout 익히기</h1>
   <h2>02-1 대표적인 Layout</h2>
   <table>
     <caption style="text-align: left;">Android에서 제공하는 대표적인 Layout</caption>
@@ -413,7 +414,7 @@ android {
         <li>ScrollView : default. vertical.</li>
         <li>HorizontalScrollView</li>
       </ul>
-      <h1><span class="chapter-number">03</span><span class="chapter-title">기본 Widget과 Drawable 사용하기</span></h1>
+      <h1 class="chapter-title"><span class="chapter-number">03</span>기본 Widget과 Drawable 사용하기</h1>
       <h2>03-1 기본 Widget 다시 한 번 자세히 공부하기</h2>
       <h4>TextView</h4>
       <table>
@@ -1330,7 +1331,7 @@ binding.button.setOnClickListener {
           <td>현재 값을 기준으로 값을 더하거나 뺀다.</td>
         </tr>
       </table>
-      <h1><span class="chapter-number">04</span><span class="chapter-title">여러 화면 간 전환하기</span></h1>
+      <h1 class="chapter-title"><span class="chapter-number">04</span>여러 화면 간 전환하기</h1>
       <h2>04-1 Layout Inflation 이해하기</h2>
       <ul>
         <li>App을 실행할 때 layout file(*.xml)과 source code file(*.kt / *.java)이 필요하다.<br>
@@ -2344,9 +2345,173 @@ class MainActivity : AppCompatActivity() {
     showToast("onRestoreInstanceState")
   }
 }</pre>
-      
+      <h1 class="chapter-title"><span class="chapter-number">05</span>Fragment 이해하기</h1>
+      부분 화면을 위한 layout이나 source code를 한 번만 정의하고 재사용할 수 있도록 만든것이 fragment 다.
+      <h2>05-1 Fragment 란?</h2>
+      <h4>Fragment 이해하기</h4>
+      <ul>사용 목적
+        <li>분할된 화면들을 독립적으로 구성하기 위해 사용한다.</li>
+        <li>분할된 화면들의 상태를 관리하기 위해 사용한다.</li>
+      </ul><br>
+      <ul>화면의 의미
+        <li>Activity : system에서 관리하는 화면 </li>
+        <li>Fragment : 단순히 activity 위에 올라가는 부분 화면</li>
+      </ul><br>
+      Fragment는 항상 activity에 올라가 있어야 한다.<br>
+      Fragment가 동작하는 시점은 memory에 만들어진 시점이 아니라 activity에 올라가는 시점이다.<br><br>
+      <table class="table-no-border">
+        <caption>Activity가 독립적으로 동작하는 방식을 본떠 만든 Fragment</caption>
+        <tr>
+          <td>
+            <table class="table-no-border" style="text-align: center;">
+              <tr>
+                <td style="background-color: #faa;">Activity #1</td>
+                <td class="no-border" rowspan="4"></td>
+                <td style="background-color: #faa;">Activity #2</td>
+              </tr>
+              <tr>
+                <td class="no-border">|</td>
+                <td class="no-border">↑</td>
+              </tr>
+              <tr>
+                <td style="background-color: #afa;">Intent</td>
+                <td style="background-color: #afa;">Intent</td>
+              </tr>
+              <tr>
+                <td class="no-border">↓</td>
+                <td class="no-border">|</td>
+              </tr>
+              <tr>
+                <td style="background-color: #aaf; padding-top: 5px;" colspan="3"><span style="display:inline-block; margin-bottom: 5px; background-color: #faf;border: 1px solid black; padding: 2px 5px">Activity Manager</span><br>Android System</td>
+              </tr>
+            </table>
+          </td>
+          <td class="no-border"></td>
+          <td style="background-color: #aaf;">
+            <table class="table-no-border" style="text-align: center;">
+              <tr>
+                <td style="background-color: #faa;">Fragment #1</td>
+                <td class="no-border" rowspan="4"></td>
+                <td style="background-color: #faa;">Fragment #2</td>
+              </tr>
+              <tr>
+                <td class="no-border">|</td>
+                <td class="no-border">↑</td>
+              </tr>
+              <tr>
+                <td style="background-color: #afa;">Method 호출</td>
+                <td style="background-color: #afa;">Method 호출</td>
+              </tr>
+              <tr>
+                <td class="no-border">↓</td>
+                <td class="no-border">|</td>
+              </tr>
+              <tr>
+                <td colspan="3" style="background-color: #faf;">Fragment Manager</td>
+              </tr>
+              <tr><td class="no-border" colspan="3">Activity</td></tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+      <h4>Fragment를 화면에 추가하는 방법 이해하기</h4>
+      Fragment도 activity 처럼 하나의 XML layout file과 하나의 source code로 구성된다.<br>
+      <table>
+        <caption><a href="https://developer.android.com/reference/kotlin/androidx/fragment/app/Fragment" target="_blank">Fragment</a>의 주요 method들</caption>
+        <tr>
+          <th>method</th>
+          <th>설명</th>
+        </tr>
+        <tr>
+          <td><pre class="no-bg">@Nullable fun getActivity(): FragmentActivity?</pre></td>
+          <td>이 fragment를 포함하는 activity를 구한다. Context에 포함된 경우 null을 반환한다.</td>
+        </tr>
+        <tr>
+          <td><pre class="no-bg">
+// androidx.fragment.app.Fragment
+@NonNull fun getParentFragmentManager(): FragmentManager</pre></td>
+          <td>이 fragment를 포함하는 activity에서 fragment 객체들과 의사소통하는 fragment manager를 구한다.</td>
+        </tr>
+        <tr>
+          <td><pre class="no-bg">
+// androidx.fragment.app.FragmentActivity
+@NonNull open fun getSupportFragmentManager(): FragmentManager</pre></td>
+          <td>이 fragment를 포함하는 activity에서 fragment 객체들과 의사소통하는 fragment manager를 구한다.</td>
+        </tr>
+        <tr>
+          <td><pre class="no-bg">@Nullable fun getParentFragment(): Fragment?</pre></td>
+          <td>부모 fragment를 구한다. 부모가 activity이면 null 이다.</td>
+        </tr>
+        <tr>
+          <td><pre class="no-bg">fun getId(): Int</pre></td>
+          <td>이 fragment의 id를 구한다.</td>
+        </tr>
+        <tr>
+          <td><pre class="no-bg">
+@MainThread @Nullable open fun onCreateView(
+  @NonNull inflater: LayoutInflater, 
+  @Nullable container: ViewGroup?, 
+  @Nullable savedInstanceState: Bundle?
+): View?</pre></td>
+          <td>Callback method. 여기서 inflation을 수행한다.</td>
+        </tr>
+      </table><br>
+      <p>XML layout에 <span class="my-strong">&lt;fragment></span> tag를 사용해 추가하거나 FragmentManager의 add() method를 사용해 activity에 추가할 수 있다.</p>
+      FragmentManager는 fragment를 activity에 추가(add), 다른 fragment로 바꾸거나(replace) 또는 삭제(remove)할 때 사용할 수 있다.<br>
+      <table><caption><a href="https://developer.android.com/reference/kotlin/androidx/fragment/app/FragmentManager" target="_blank">FragmentManager</a>의 주요 method 들</caption>
+        <tr>
+          <th>method</th>
+          <th>설명</th>
+        </tr>
+        <tr>
+          <td><pre class="no-bg">@NonNull open fun beginTransaction(): FragmentTransaction</pre></td>
+          <td>Fragment를 변경하기 위한 transaction을 시작한다.</td>
+        </tr>
+        <tr>
+          <td><pre class="no-bg">@Nullable open fun findFragmentById(@IdRes id: Int): Fragment?</pre></td>
+          <td>Id를 이용해 fragment를 찾는다.</td>
+        </tr>
+        <tr>
+          <td><pre class="no-bg">@Nullable open fun findFragmentByTag(@Nullable tag: String?): Fragment?</pre></td>
+          <td>Tag 정보를 이용해 fragment를 찾는다.</td>
+        </tr>
+        <tr>
+          <td><pre class="no-bg">open fun executePendingTransactions(): Boolean</pre></td>
+          <td>Transaction은 commit()을 호출하면 실행되지만 비동기(asynchronous) 방식으로 실행되므로 즉시 실행하고 싶다면 이 method를 추가로 호출해야 한다.</td>
+        </tr>
+      </table><br>
+      <table><caption>Fragment의 특성</caption>
+        <tr>
+          <th>특성</th>
+          <th>설명</th>
+        </tr>
+        <tr>
+          <td>View</td>
+          <td>View group에 추가되거나 layout의 일부가 될 수 있다.<br>(View에서 상속받은 것은 아니며 view를 담고 있는 일종의 틀이다.)</td>
+        </tr>
+        <tr>
+          <td>Activity</td>
+          <td>수명주기를 가지고 있다.<br>(Context 객체는 아니며 수명주기는 activity에 종속된다.)</td>
+        </tr>
+      </table>
+      <h4>Fragment 만들어 화면에 추가하기</h4>
 
-      <h1><span class="chapter-number">05</span><span class="chapter-title">Fragment 이해하기</span></h1>
+      <h4>Button click 했을 때 code에서 fragment 추가하기</h4>
+      <h4>Fragment의 수명주기</h4>
+      <h2>05-2 Fragment로 화면 만들기</h2>
+      <h2>05-3 ActionBar 사용하기</h2>
+      <h4>화면에 Menu 기능 넣기</h4>
+      <h4>ActionBar 좀 더 살펴보기</h4>
+      <h2>05-4 상단 Tab과 하단 Tab 만들기</h2>
+      <h4>상단 Tab 보여주기</h4>
+      <h4>하단 Tab 보여주기</h4>
+      <h2>05-5 ViewPager 만들기</h2>
+      <h2>05-6 바로가기 Menu 만들기</h2>
+      <h1 class="chapter-title"><span class="chapter-number">06</span>Service와 수신자(Broadcast Receiver) 이해하기</h1>
+
+
+
+
 
 
 
