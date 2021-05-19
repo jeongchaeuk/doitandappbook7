@@ -11,7 +11,7 @@
     table,
     th,
     td {
-      padding: 0rem .5rem;
+      padding: .25rem .5rem;
       border: 1px solid black;
       border-collapse: collapse;
     }
@@ -132,6 +132,7 @@
       arrow_circle_down
     </span>
   </a>
+  <h4><i>📖 Doit! Android App Programming 7th. Kotlin</i></h4>
   <h1 class="chapter-title"><span class="chapter-number">01</span>Android Studio와 친숙해지기</h1>
   <h2>01-3 레이아웃 기초 익히기</h2>
   <table>
@@ -2879,6 +2880,8 @@ class MainActivity : AppCompatActivity() {
     }
   }
 }</pre>
+      <a href="https://github.com/android/architecture-components-samples/tree/main/ViewBindingSample" target="_blank">참조 GitHub: android
+        /architecture-components-samples</a>
       <h4>Fragment의 수명주기</h4>
       <table>
         <caption>화면에 보이기 전에 호출되는 method들</caption>
@@ -3075,10 +3078,534 @@ open fun onDetach(): Unit</pre>
         </tr>
       </table>
       <h2>05-2 Fragment로 화면 만들기</h2>
-      
+      <p>하나의 activity에 두 개의 fragment를 표시한다.<br>List fragment에서 선택한 그림을 아래 viewer fragment에 표시한다.</p>
+      res/layout/fragment_list.xml<br>
+      <pre>&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:gravity="center"
+  android:orientation="vertical"
+  tools:context=".ListFragment">
+
+  &lt;Button
+    android:id="@+id/button1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="이미지 #1"
+    android:textSize="24sp" />
+
+  &lt;Button
+    android:id="@+id/button2"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:text="이미지 #2"
+    android:textSize="24sp" />
+
+  &lt;Button
+    android:id="@+id/button3"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:text="이미지 #3"
+    android:textSize="24sp" />
+&lt;/LinearLayout></pre><br>
+      ListFragment.kt<br>
+      <pre>
+package com.xxx.samplefragment2
+
+import android.content.Context
+import android.os.Bundle
+import android.view.View
+import androidx.fragment.app.Fragment
+import com.xxx.samplefragment2.databinding.FragmentListBinding
+
+class ListFragment : <span class="my-strong">Fragment(R.layout.fragment_list)</span> {
+
+  <span class="my-strong">interface ImageSelectionCallback</span> {
+    fun onImageSelected(index: Int)
+  }
+
+  private var callback: ImageSelectionCallback? = null
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+
+    if (context is ImageSelectionCallback)
+      callback = context
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+
+    val binding = FragmentListBinding.bind(view)
+
+    binding.button1.setOnClickListener {
+        callback?.onImageSelected(0)
+    }
+
+    binding.button2.setOnClickListener {
+      callback?.onImageSelected(1)
+    }
+
+    binding.button3.setOnClickListener {
+      callback?.onImageSelected(2)
+    }
+  }
+
+  override fun onDetach() {
+    callback = null
+
+    super.onDetach()
+  }
+
+}</pre><br>
+      /res/layout/fragment_viewer.xml<br>
+      <pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:gravity="center"
+  android:orientation="vertical"
+  tools:context=".ViewerFragment">
+
+  &lt;ImageView
+    android:id="@+id/imageView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scaleType="fitCenter"
+    android:src="@drawable/dream01" />
+&lt;/LinearLayout></pre><br>
+      ViewerFragment.kt<br>
+      <pre>
+package com.xxx.samplefragment2
+
+import androidx.fragment.app.Fragment
+import com.xxx.samplefragment2.databinding.FragmentViewerBinding
+
+class ViewerFragment : <span class="my-strong">Fragment(R.layout.fragment_viewer)</span> {
+
+  public fun setImage(resId: Int) {
+    view?.also { // it: View
+      FragmentViewerBinding.bind(it).imageView.setImageResource(resId)
+    }
+  }
+}</pre><br>
+      /res/layout/activity_main.xml<br>
+      <pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  tools:context=".MainActivity">
+
+  &lt;androidx.fragment.app.FragmentContainerView
+    android:id="@+id/listFragment"
+    android:name="com.xxx.samplefragment2.ListFragment"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1" />
+
+  &lt;androidx.fragment.app.FragmentContainerView
+    android:id="@+id/viewerFragment"
+    android:name="com.xxx.samplefragment2.ViewerFragment"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1" />
+&lt;/LinearLayout>
+</pre><br>
+      MainActivity.kt<br>
+      <pre>
+package com.xxx.samplefragment2
+
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.xxx.samplefragment2.ListFragment.ImageSelectionCallback
+
+class MainActivity : <span class="my-strong">ImageSelectionCallback</span>, AppCompatActivity() {
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
+  }
+
+  <span class="my-strong">override fun onImageSelected(index: Int)</span> {
+    val images = arrayOf(R.drawable.dream01, R.drawable.dream02, R.drawable.dream03)
+
+    (supportFragmentManager.findFragmentById(R.id.viewerFragment) as? ViewerFragment)?.apply {
+      setImage(images[index])
+    }
+  }
+}</pre>
       <h2>05-3 ActionBar 사용하기</h2>
+      ActionBar는 app의 제목이 보이는 위쪽 부분이다.
       <h4>화면에 Menu 기능 넣기</h4>
+      <table>
+        <tr>
+          <th>Menu</th>
+          <th>설명</th>
+        </tr>
+        <tr>
+          <td>Option</td>
+          <td>System menu button을 눌렀을 때 나타나는 menu로 각 화면마다 설정할 수 있는 주요 menu다.<br>
+            ActionBar에 포함되어 보이도록 만들어져 있다.</td>
+        </tr>
+        <tr>
+          <td>Context</td>
+          <td>화면을 길게 누르면 나타나는 pop-up 형태의 menu로 view에 설정하여 나타나게 할 수 있습니다.<br>TextView의 편집상태를 바꾸거나 할 때 사용한다.</td>
+        </tr>
+      </table><br>
+      <table>
+        <caption>다음의 method를 재정의해서 activity에 menu를 추가한다.</caption>
+        <tr>
+          <th>method</th>
+          <th>설명</th>
+        </tr>
+        <tr>
+          <td>
+            <pre class="no-bg">
+open fun onCreateOptionsMenu(
+  menu: Menu!
+): Boolean</pre>
+          </td>
+          <td>Activity의 표준 option menu의 내용을 초기화 한다.<br>Menu item들을 menu에 넣어야 한다.<br>Option menu가 처음 표시될 때 한번만 호출된다.</td>
+        </tr>
+        <tr>
+          <td>
+            <pre class="no-bg">
+open fun onPrepareOptionsMenu(
+  menu: Menu!
+): Boolean</pre>
+          </td>
+          <td>화면이 표시된 후에 menu를 바꾸고 싶을 때 사용한다.<br>Menu가 새로 보일 때마다 호출된다.</td>
+        </tr>
+        <tr>
+          <td>
+            <pre class="no-bg">
+open fun onCreateContextMenu(
+  menu: ContextMenu!, 
+  v: View!, 
+  menuInfo: ContextMenu.ContextMenuInfo!
+): Unit</pre>
+          </td>
+          <td><code>View</code>를 위한 context menu가 보일 때 호출된다.<br><code>onCreateOptionsMenu</code>와 다르게 context menu가 보일 때 마다 호출된다.</td>
+        </tr>
+      </table><br>
+      Menu나 ContextMenu의 add()를 이용해서 menu item을 추가한다.
+      <table>
+        <caption>Menu item을 추가할 수 있는 대표적인 method</caption>
+        <tr>
+          <th>method</th>
+          <th>설명</th>
+        </tr>
+        <tr>
+          <td>
+            <pre class="no-bg">
+abstract fun add(
+  groupId: Int, 
+  itemId: Int, 
+  order: Int, 
+  title: CharSequence!
+): MenuItem!</pre>
+          </td>
+          <td rowspan="2">Menu에 새 item을 추가한다.</td>
+        </tr>
+        <tr>
+          <td>
+            <pre class="no-bg">
+abstract fun add(
+  groupId: Int, 
+  itemId: Int, 
+  order: Int, 
+  titleRes: Int
+): MenuItem!</pre>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <pre class="no-bg">
+abstract fun addSubMenu(
+  titleRes: Int
+): SubMenu!</pre>
+          </td>
+          <td>Menu에 새 sub-menu를 추가한다.</td>
+        </tr>
+      </table>
+      <h4>XML로 menu 정의하기</h4>
+      <ul>
+        <li>XML에서 menu의 속성을 정의한 후 객체로 loading해서 참조할 수도 있다.</li>
+        <li>반드시 <span class="my-strong">/res/menu</span> folder에 menu XML file을 저장한다.</li>
+      </ul>
+      /res/menu/menu_main.xml<br>
+      <pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;menu
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+  &lt;item
+    android:id="@+id/menu_refresh"
+    android:icon="@drawable/menu_refresh"
+    android:title="새로고침"
+    app:showAsAction="always" />
+  &lt;item
+    android:id="@+id/menu_search"
+    android:icon="@drawable/menu_search"
+    android:title="검색"
+    app:showAsAction="always" />
+  &lt;item
+    android:id="@+id/menu_settings"
+    android:icon="@drawable/menu_settings"
+    android:title="설정"
+    app:showAsAction="always" />
+&lt;/menu></pre>
+      <table>
+        <caption>showAsAction 속성에 설정할 수 있는 값</caption>
+        <tr>
+          <th>속성</th>
+          <th>설명</th>
+        </tr>
+        <tr>
+          <td>always</td>
+          <td>항상 action bar에 item을 추가하여 표시한다.</td>
+        </tr>
+        <tr>
+          <td>never</td>
+          <td>Action bar에 item을 추가하여 표시하지 않는다. (기본값)</td>
+        </tr>
+        <tr>
+          <td>ifRoom</td>
+          <td>Action bar에 여유 공간이 있을 때만 item을 표시한다.</td>
+        </tr>
+        <tr>
+          <td>withText</td>
+          <td><code>title</code> 속성으로 설정된 제목을 같이 표시한다.</td>
+        </tr>
+        <tr>
+          <td>collapseActionView</td>
+          <td>Item에 설정한 view(actionViewLayout으로 설정한 view)의 icon만 표시한다.</td>
+        </tr>
+      </table><br>
+      MainActivity.kt<br>
+      <pre>
+package com.xxx.sampleoptionmenu
+
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+
+  // Activity가 만들어질 때 미리 자동으로 호출되어 화면에 메뉴 기능을 추가할 수 있도록 한다.
+  override fun <span class="my-strong">onCreateOptionsMenu(menu: Menu?): Boolean</span> {
+    <span class="my-strong">menuInflater.inflate(R.menu.menu_main, menu)</span>
+
+    return super.onCreateOptionsMenu(menu)
+  }
+
+  // Menu가 선택되었을 때 처리하는 방법
+  override fun <span class="my-strong">onOptionsItemSelected(item: MenuItem): Boolean</span> {
+    val text =
+      when (item.itemId) {
+        R.id.menu_refresh ->  { "Refresh menu" }
+        R.id.menu_search ->   { "Search menu" }
+        R.id.menu_settings -> { "Setting menu" }
+        else -> { "Unknown menu!" }
+      }
+    Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT).show()
+
+    return super.onOptionsItemSelected(item)
+  }
+}</pre><br>
+<img src="sample_action_bar.png" width="387px" height="69px" style="box-shadow: 2px 2px 4px black;" />
+      <h4>Context menu를 View에 등록하기</h4>
+      <table>
+        <caption>android.app.Activity</caption>
+        <tr>
+          <th>method</th>
+          <th>설명</th>
+        </tr>
+        <tr>
+          <td>
+            <pre class="no-bg">
+open fun registerForContextMenu(
+  view: View!
+): Unit</pre>
+      </td>
+      <td>Context menu를 특정 view에 등록한다.</td>
+      </tr>
+      <tr>
+        <td>
+          <pre class="no-bg">
+open fun onContextItemSelected(
+  item: MenuItem
+): Boolean</pre>
+        </td>
+        <td>Context menu의 item이 선택되었을 때 호출된다.</td>
+      </tr>
+      </table>
       <h4>ActionBar 좀 더 살펴보기</h4>
+      <ul>
+        <li>Activity 위쪽에 보이는 제목 부분과 option menu는 action bar로 합쳐져 보이게 된다.</li>
+        <li>기본적으로 제목을 보여준다.</li>
+        <li>보이거나 보이지 않게 설정할 수 있다.<code>show(), hide()</code></li>
+        <li>부제목을 지정할 수도 있다. <code>setSubtitle()</code></li>
+        <li>왼쪽에 icon을 표시할 수도 있다.</li>
+      </ul>
+      위에서 사용한 /res/menu/menu_main.xml를 이용한다.<br>
+      MainActivity.kt<br>
+      <pre>
+package com.xxx.actionbar
+
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+<span class="my-strong">import androidx.appcompat.app.ActionBar</span>
+import androidx.appcompat.app.AppCompatActivity
+import com.xxx.actionbar.databinding.ActivityMainBinding
+
+class MainActivity : AppCompatActivity() {
+  private lateinit var binding: ActivityMainBinding
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+    binding = ActivityMainBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
+    binding.button.setOnClickListener {
+      <span class="my-strong">supportActionBar?.setLogo(R.drawable.home)</span>
+      <span class="my-strong">supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_HOME or ActionBar.DISPLAY_USE_LOGO</span>
+    }
+  }
+
+  override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    menuInflater.inflate(R.menu.menu_main, menu)
+
+    return super.onCreateOptionsMenu(menu)
+  }
+
+  override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    binding.textView.text =
+    when (item.itemId) {
+      R.id.menu_refresh->{"Refresh menu"}
+      R.id.menu_search->{"Search"}
+      R.id.menu_settings->{"Settings"}
+      else->{"Unknown menu item"}
+    }
+
+    return super.onOptionsItemSelected(item)
+  }
+}</pre>
+<table><caption>ActionBar의 display option으로 설정할 수 있는 상수들</caption>
+  <tr>
+    <th>값</th>
+    <th>설명</th>
+  </tr>
+  <tr>
+    <td><code class="no-bg">DISPLAY_USE_LOGO</code></td>
+    <td>Home icon 부분에 logo를 사용한다.<br>Logo icon은 manifest에 등록된 activity의 속성으로 지정할 수도 있다.</td>
+  </tr>
+  <tr>
+    <td><code class="no-bg">DISPLAY_SHOW_HOME</code></td>
+    <td>ActionBar에 'home' 요소를 표시한다.</td>
+  </tr>
+  <tr>
+    <td><code class="no-bg">DISPLAY_HOME_AS_UP</code></td>
+    <td>Home icon에 뒤로가기 모양의 icon을 같이 표시한다.</td>
+  </tr>
+  <tr>
+    <td><code class="no-bg">DISPLAY_SHOW_TITLE</code></td>
+    <td>제목을 표시하도록 한다.</td>
+  </tr>
+</table>
+<h4>ActionBar에 입력상자 넣기</h4>
+/res/layout/search_layout.xml : 입력상자를 위한 layout<br>
+<pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  &lt;TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="검색:" />
+
+  &lt;EditText
+    android:id="@+id/textEditSearch"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:hint="검색어를 입력하세요."
+    <span class="my-strong">android:imeOptions="actionDone"</span>
+    android:inputType="text" />
+&lt;/LinearLayout></pre>
+* <code>actionDone</code> : IME soft keyboard에 완료 버튼을 표시한다.<br><br>
+/res/menu/menu_main.xml<br>
+<pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;menu
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  &lt;item
+    android:id="@+id/menu_refresh"
+    android:icon="@drawable/menu_refresh"
+    android:title="새로고침"
+    app:showAsAction="ifRoom" />
+
+  &lt;item
+    android:id="@+id/menu_settings"
+    android:icon="@drawable/menu_settings"
+    android:title="설정"
+    app:showAsAction="ifRoom" />
+
+  &lt;item
+    android:id="@+id/menu_search"
+    android:icon="@drawable/menu_search"
+    android:title="검색"
+    <span class="my-strong">app:actionLayout="@layout/search_layout"</span>
+    app:showAsAction="always|withText" />
+&lt;/menu></pre>
+* <code>actionLayout</code>의 XML name space를 <code>android:</code>로 지정하면 표시가 안된다! (API Level 문제?)<br><br>
+MainActivity.kt
+<pre>
+...
+import com.xxx.actionbar.databinding.SearchLayoutBinding
+
+class MainActivity : AppCompatActivity() {
+  ...
+  override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    menuInflater.inflate(R.menu.menu_main, menu)
+
+    <span class="my-strong">menu?.findItem(R.id.menu_search)?.actionView</span>?.let { // it: View
+      val searchBinding = <span class="my-strong">SearchLayoutBinding.bind(it)</span>
+      searchBinding.textEditSearch<span class="my-strong">.setOnEditorActionListener</span> { v, actionId, event ->
+        v.run {
+          Toast.makeText(applicationContext, "입력됨 $actionId, $event, ${v.text}", Toast.LENGTH_SHORT).show()
+          
+          // IME keyboard 닫기
+          <span class="my-strong">getSystemService<InputMethodManager>()?.hideSoftInputFromWindow(v.windowToken, 0)</span>
+          true
+        }
+      }
+    }
+
+    return super.onCreateOptionsMenu(menu)
+  }
+  ...
+}</pre>
       <h2>05-4 상단 Tab과 하단 Tab 만들기</h2>
       <h4>상단 Tab 보여주기</h4>
       <h4>하단 Tab 보여주기</h4>
