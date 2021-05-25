@@ -70,10 +70,10 @@
     }
 
     code {
-      font-weight: bold;
+      font-weight: bolder;
       background-color: lightgray;
-      padding: .25rem;
-      border-radius: .5rem;
+      padding: .1rem .2rem;
+      border-radius: .25rem;
     }
 
     pre {
@@ -81,7 +81,7 @@
       border-radius: .5rem;
       padding: .25rem .5rem;
       font-size: .9rem;
-      background-color: #242;
+      background-color: #073042;
       color: whitesmoke;
       width: fit-content;
     }
@@ -138,18 +138,22 @@
   <table>
     <tr>
       <th>접두어</th>
+      <th>값</th>
       <th>의미</th>
     </tr>
     <tr>
-      <td>xmlns:android</td>
+      <td>android</td>
+      <td>xmlns:android="http://schemas.android.com/apk/res/android"</td>
       <td>Android 기본 SDK에 포함되어 있는 속성</td>
     </tr>
     <tr>
-      <td>xmlns:app</td>
-      <td>외부 library에 포함되어 있는 속성</td>
+      <td>app</td>
+      <td>xmlns:app="http://schemas.android.com/apk/res-auto"</td>
+      <td>외부 library에 포함되어 있는 속성. 예로 하위호환을 위한 library가 있다.</td>
     </tr>
     <tr>
-      <td>xmlns:tools</td>
+      <td>tools</td>
+      <td>xmlns:tools="http://schemas.android.com/tools"</td>
       <td>Android Studio에서만 사용되는 속성</td>
     </tr>
   </table>
@@ -158,7 +162,7 @@
     <caption>크기를 표시하는 단위와 Margin</caption>
     <tr>
       <th>단위</th>
-      <th>표현</th>
+      <th>의미</th>
       <th>설명</th>
     </tr>
     <tr>
@@ -167,13 +171,13 @@
       <td></td>
     </tr>
     <tr>
-      <td class="prefer">dp</td>
+      <td><span class="my-strong">dp</span></td>
       <td>density independent pixel</td>
       <td>160dpi 화면을 기준으로 한 pixel<br>
         ex) 160px/inch 에서는 1dp = 1px, 320px/inch 에서는 1dp = 2px</td>
     </tr>
     <tr>
-      <td class="prefer">sp</td>
+      <td><span class="my-strong">sp</span></td>
       <td>scale independent pixel</td>
       <td>text 크기를 지정할 때 사용.<br>
         가변 글꼴을 기준으로 한 pixel. 글꼴의 설정에 따라 1sp 당 pixel 수가 달라진다.</td>
@@ -195,7 +199,7 @@
     </tr>
   </table>
   * view에는 dp, 글자는 sp를 사용한다.<br>
-  <p class="warning">주의) "app/src/main/res" folder에 file을 추가할 때 file 이름은 영어 소문자, 숫자, _ 기호로만 만들어야 하며, 첫 글자는 영문자로 시작해야 한다.</p>
+  <span class="my-strong">* "app/src/main/res" folder에 file을 추가할 때 file 이름은 영어 소문자, 숫자, _ 기호로만 만들어야 하며, 첫 글자는 영문자로 시작해야 한다.</span><br>
   <h1 class="chapter-title"><span class="chapter-number">02</span>Layout 익히기</h1>
   <h2>02-1 대표적인 Layout</h2>
   <table>
@@ -670,7 +674,7 @@ android {
 &lt;/selector></pre>
       이렇게 만든 xml을 view의 background로 지정한다.
       <h4>ShapeDrawable 만들기</h4>
-      /app/res/rect_drawable.xml 사각형
+      /app/res/drawable/rect_drawable.xml 사각형
       <pre>
 &lt;?xml version="1.0" encoding="utf-8"?>
 &lt;shape
@@ -685,7 +689,7 @@ android {
   &lt;solid android:color="#f77" />
   &lt;padding android:bottom="1dp" />
 &lt;/shape></pre><br>
-      /app/res/back_drawable.xml
+      /app/res/drawable/back_drawable.xml
       <pre>
 &lt;?xml version="1.0" encoding="utf-8"?>
 &lt;shape
@@ -699,7 +703,8 @@ xmlns:android="http://schemas.android.com/apk/res/android">
   &lt;corners android:radius="2dp" />
 &lt;/shape>
 </pre><br>
-      &lt;layer-list> tag를 사용하면 여러 개의 graphic를 하나의 xml file에 넣을 수 있다.
+      &lt;layer-list> tag를 사용하면 여러 개의 graphic를 하나의 xml file에 넣을 수 있다.<br>
+      /res/drawable/border_drawable.xml
       <pre>
 &lt;?xml version="1.0" encoding="utf-8"?>
 &lt;layer-list
@@ -2441,7 +2446,7 @@ class MainActivity : AppCompatActivity() {
       <h4><a href="https://developer.android.com/guide/fragments/create#setup" target="_blank">환경 설정</a></h4>
       <ul>
         <li>Fragment는 AndroidX Fragment library에 대한 종속성이 필요하다.</li>
-        <li>Google Maven repository를 project에 추가해야 한다.</li>
+        <li><a href="https://maven.google.com/web/index.html?" target="_blank">Google's Maven repository</a>를 project에 추가해야 한다.</li>
       </ul>
       <table>
         <tr>
@@ -2450,7 +2455,7 @@ class MainActivity : AppCompatActivity() {
         </tr>
         <tr>
           <td>
-            <pre>
+            <pre class="no-bg">
 buildscript {
   ...
   repositories {
@@ -2467,9 +2472,9 @@ allprojects {
 }</pre>
           </td>
           <td>
-            <pre>
+            <pre class="no-bg">
 dependencies {
-  def fragment_version = "1.3.3"
+  def fragment_version = "1.3.4"
 
   // Java language implementation
   implementation "androidx.fragment:fragment:$fragment_version"
@@ -2603,7 +2608,7 @@ open fun findFragmentByTag(
   android:layout_height="match_parent" />
 
 &lt;-- Fragment class 추가 시 tag 추가 방법 예시 -->
-&lt;fragment
+&lt;<span class="my-strong">androidx.fragment.app.FragmentContainerView</span>
   android:name="com.xxx.ui.fragment.MyFragment"
   android:layout_width="match_parent"
   android:layout_height="match_parent" /></pre><br>
@@ -2646,7 +2651,7 @@ open fun findFragmentByTag(
   android:orientation="vertical"
   tools:context=".MainActivity">
 
-  <span class="my-strong">&lt;fragment</span>
+  <span class="my-strong">&lt;androidx.fragment.app.FragmentContainerView</span>
     android:id="@+id/mainFragment"
     <span class="my-strong">android:name="com.xxx.samplefragment.MainFragment"</span>
     android:layout_width="match_parent"
@@ -3427,7 +3432,7 @@ class MainActivity : AppCompatActivity() {
     return super.onOptionsItemSelected(item)
   }
 }</pre><br>
-<img src="sample_action_bar.png" width="387px" height="69px" style="box-shadow: 2px 2px 4px black;" />
+      <img src="sample_action_bar.png" width="387px" height="69px" style="box-shadow: 2px 2px 4px black;" />
       <h4>Context menu를 View에 등록하기</h4>
       <table>
         <caption>android.app.Activity</caption>
@@ -3441,18 +3446,18 @@ class MainActivity : AppCompatActivity() {
 open fun registerForContextMenu(
   view: View!
 ): Unit</pre>
-      </td>
-      <td>Context menu를 특정 view에 등록한다.</td>
-      </tr>
-      <tr>
-        <td>
-          <pre class="no-bg">
+          </td>
+          <td>Context menu를 특정 view에 등록한다.</td>
+        </tr>
+        <tr>
+          <td>
+            <pre class="no-bg">
 open fun onContextItemSelected(
   item: MenuItem
 ): Boolean</pre>
-        </td>
-        <td>Context menu의 item이 선택되었을 때 호출된다.</td>
-      </tr>
+          </td>
+          <td>Context menu의 item이 선택되었을 때 호출된다.</td>
+        </tr>
       </table>
       <h4>ActionBar 좀 더 살펴보기</h4>
       <ul>
@@ -3507,31 +3512,32 @@ class MainActivity : AppCompatActivity() {
     return super.onOptionsItemSelected(item)
   }
 }</pre>
-<table><caption>ActionBar의 display option으로 설정할 수 있는 상수들</caption>
-  <tr>
-    <th>값</th>
-    <th>설명</th>
-  </tr>
-  <tr>
-    <td><code class="no-bg">DISPLAY_USE_LOGO</code></td>
-    <td>Home icon 부분에 logo를 사용한다.<br>Logo icon은 manifest에 등록된 activity의 속성으로 지정할 수도 있다.</td>
-  </tr>
-  <tr>
-    <td><code class="no-bg">DISPLAY_SHOW_HOME</code></td>
-    <td>ActionBar에 'home' 요소를 표시한다.</td>
-  </tr>
-  <tr>
-    <td><code class="no-bg">DISPLAY_HOME_AS_UP</code></td>
-    <td>Home icon에 뒤로가기 모양의 icon을 같이 표시한다.</td>
-  </tr>
-  <tr>
-    <td><code class="no-bg">DISPLAY_SHOW_TITLE</code></td>
-    <td>제목을 표시하도록 한다.</td>
-  </tr>
-</table>
-<h4>ActionBar에 입력상자 넣기</h4>
-/res/layout/search_layout.xml : 입력상자를 위한 layout<br>
-<pre>
+      <table>
+        <caption>ActionBar의 display option으로 설정할 수 있는 상수들</caption>
+        <tr>
+          <th>값</th>
+          <th>설명</th>
+        </tr>
+        <tr>
+          <td><code class="no-bg">DISPLAY_USE_LOGO</code></td>
+          <td>Home icon 부분에 logo를 사용한다.<br>Logo icon은 manifest에 등록된 activity의 속성으로 지정할 수도 있다.</td>
+        </tr>
+        <tr>
+          <td><code class="no-bg">DISPLAY_SHOW_HOME</code></td>
+          <td>ActionBar에 'home' 요소를 표시한다.</td>
+        </tr>
+        <tr>
+          <td><code class="no-bg">DISPLAY_HOME_AS_UP</code></td>
+          <td>Home icon에 뒤로가기 모양의 icon을 같이 표시한다.</td>
+        </tr>
+        <tr>
+          <td><code class="no-bg">DISPLAY_SHOW_TITLE</code></td>
+          <td>제목을 표시하도록 한다.</td>
+        </tr>
+      </table>
+      <h4>ActionBar에 입력상자 넣기</h4>
+      /res/layout/search_layout.xml : 입력상자를 위한 layout<br>
+      <pre>
 &lt;?xml version="1.0" encoding="utf-8"?>
 &lt;LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
@@ -3551,9 +3557,9 @@ class MainActivity : AppCompatActivity() {
     <span class="my-strong">android:imeOptions="actionDone"</span>
     android:inputType="text" />
 &lt;/LinearLayout></pre>
-* <code>actionDone</code> : IME soft keyboard에 완료 버튼을 표시한다.<br><br>
-/res/menu/menu_main.xml<br>
-<pre>
+      * <code>actionDone</code> : IME soft keyboard에 완료 버튼을 표시한다.<br><br>
+      /res/menu/menu_main.xml<br>
+      <pre>
 &lt;?xml version="1.0" encoding="utf-8"?>
 &lt;menu
   xmlns:android="http://schemas.android.com/apk/res/android"
@@ -3578,9 +3584,9 @@ class MainActivity : AppCompatActivity() {
     <span class="my-strong">app:actionLayout="@layout/search_layout"</span>
     app:showAsAction="always|withText" />
 &lt;/menu></pre>
-* <code>actionLayout</code>의 XML name space를 <code>android:</code>로 지정하면 표시가 안된다! (API Level 문제?)<br><br>
-MainActivity.kt
-<pre>
+      * <code>actionLayout</code>의 XML name space를 <code>android:</code>로 지정하면 표시가 안된다! (API Level 문제?)<br><br>
+      MainActivity.kt
+      <pre>
 ...
 import com.xxx.actionbar.databinding.SearchLayoutBinding
 
@@ -3607,13 +3613,615 @@ class MainActivity : AppCompatActivity() {
   ...
 }</pre>
       <h2>05-4 상단 Tab과 하단 Tab 만들기</h2>
+      Material library를 사용한다.<br>
+      build.gradle(Module)
+      <pre>
+dependencies {
+  implementation 'com.google.android.material:material:1.3.0'
+}</pre>
       <h4>상단 Tab 보여주기</h4>
-      <h4>하단 Tab 보여주기</h4>
-      <h2>05-5 ViewPager 만들기</h2>
-      <h2>05-6 바로가기 Menu 만들기</h2>
-      <h1 class="chapter-title"><span class="chapter-number">06</span>Service와 수신자(Broadcast Receiver) 이해하기</h1>
+      <ul>
+        <li><code>CoordinatorLayout</code>은 ActionBar 영역을 포함한 전체 화면의 위치를 잡아주는 역할을 한다.</li>
+        <li>CoordinatorLayout 안에 <code>AppBarLayout</code>과 함께 다른 layout을 넣으면 그 둘 간의 간격이나 위치가 자동으로 결정된다.</li>
+        <li>AppBarLayout은 ActionBar를 가라킨다.<br>이 안에는 <code>Toolbar</code>가 들어갈 수 있고, tab을 사용하는 경우엔 tab의 button들이 들어갈 수 있는 <code>TabLayout</code>을 추가할 수 있다.</li>
+      </ul>
+      /res/layout/activity_main.xml
+      <pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;<span class="my-strong">androidx.coordinatorlayout.widget.CoordinatorLayout</span>
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
 
-      <br><br><br>
+  &lt;<span class="my-strong">com.google.android.material.appbar.AppBarLayout</span>
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+    &lt;<span class="my-strong">androidx.appcompat.widget.Toolbar</span>
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="?attr/colorPrimaryDark"
+      android:minHeight="?attr/actionBarSize"
+      android:theme="@style/ThemeOverlay.AppCompat.Dark"
+      app:elevation="1dp">
+
+      &lt;TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="타이틀"
+        android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
+
+    &lt;/androidx.appcompat.widget.Toolbar>
+
+    &lt;<span class="my-strong">com.google.android.material.tabs.TabLayout</span>
+      android:id="@+id/tabs"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@android:color/background_light"
+      <span class="my-strong">app:tabGravity="fill"</span>
+      <span class="my-strong">app:tabMode="fixed"</span>
+      app:tabSelectedTextColor="?attr/colorAccent"
+      app:tabTextColor="?attr/colorPrimary"
+      app:elevation="1dp" />
+
+  &lt;/com.google.android.material.appbar.AppBarLayout>
+
+  &lt;<span class="my-strong">FrameLayout</span>
+    android:id="@+id/container"
+    <span class="my-strong">app:layout_behavior="@string/appbar_scrolling_view_behavior"</span>
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+
+&lt;/androidx.coordinatorlayout.widget.CoordinatorLayout></pre>
+      <code>app:layout_behavior</code> : <code>CoordinatorLayout</code> 안에서 해당 layout이 scroll등의 작업이 진행될 때 차지할 면적을 자동으로 계산하도록 한다.<br>
+
+      <br>
+      Fragment를 3개 만든다.<br>
+      /res/layout/fragment1.xml
+      <pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  android:background="#faa"
+  android:padding="10dp"
+  tools:context=".Fragment1">
+
+  &lt;Button
+    android:textSize="24sp"
+    android:id="@+id/button"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="첫 번째" />
+
+&lt;/LinearLayout></pre><br>
+      Fragment1.kt
+      <pre>
+package com.sample.tab
+
+import android.os.Bundle
+import android.view.View
+import androidx.fragment.app.Fragment
+import com.sample.tab.databinding.Fragment1Binding
+
+class Fragment1 : Fragment(R.layout.fragment1) {
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    Fragment1Binding.bind(view).button.setOnClickListener { // it: View! }
+  }
+}</pre><br>
+      MainActivity.kt<br>
+      <pre>
+package com.sample.tab
+
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
+import com.google.android.material.tabs.TabLayout
+import com.sample.tab.databinding.ActivityMainBinding
+
+class MainActivity : AppCompatActivity() {
+
+  private var _binding: ActivityMainBinding? = null
+
+  private var onTabSelectedListener = object: <span class="my-strong">TabLayout.OnTabSelectedListener</span> {
+    override fun <span class="my-strong">onTabSelected(tab: TabLayout.Tab?)</span> {
+      tab?.also {
+        setFragment(it.position)
+      }
+    }
+
+    override fun onTabUnselected(tab: TabLayout.Tab?) {}
+    override fun onTabReselected(tab: TabLayout.Tab?) {}
+  }
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+    val binding = ActivityMainBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
+    // toolbar를 action bar로 설정한다.
+    // 이 method는 activity에 기본 action bar가 없는 경우에만 동작하므로
+    // activity의 theme(<span class="my-strong">res/values/theme.xml</span>)를 action bar가 없는것으로 미리 변경해야 한다.
+    <span class="my-strong">setSupportActionBar(binding.toolbar)</span>
+
+    // Activity의 title, subtitle 표시여부를 지정한다.
+    <span class="my-strong">supportActionBar?.setDisplayShowTitleEnabled(false)</span>
+
+    // 기본으로 첫번째 fragment를 아래에 표시한다.
+    setFragment(0)
+
+    // TabLayout에 tab 3개를 추가한다.
+    binding.tabs.apply { // this: TabLayout
+      <span class="my-strong">addTab(newTab().setText("통화기록"))</span>
+      addTab(newTab().setText("스팸기록"))
+      addTab(newTab().setText("연락처"))
+
+      <span class="my-strong">addOnTabSelectedListener(onTabSelectedListener)</span>
+    }
+
+    _binding = binding
+  }
+
+  override fun onDestroy() {
+    // clear data
+    _binding?.tabs?.<span class="my-strong">removeOnTabSelectedListener(onTabSelectedListener)</span>
+    _binding = null
+
+    super.onDestroy()
+  }
+
+  // 선택한 tab의 번호로 아래 fragment를 변경한다.
+  private fun setFragment(position: Int) {
+    when (position) {
+      0 -> {
+        supportFragmentManager.commit {
+          replace&lt;Fragment1>(R.id.container)
+          setReorderingAllowed(true)
+        }
+      }
+      1 -> {
+        supportFragmentManager.commit {
+          replace&lt;Fragment2>(R.id.container)
+          setReorderingAllowed(true)
+        }
+      }
+      2 -> {
+        supportFragmentManager.commit {
+          replace&lt;Fragment3>(R.id.container)
+          setReorderingAllowed(true)
+        }
+      }
+    }
+  }
+}</pre><br>
+      /res/values/theme.xml
+      <pre>
+&lt;<span class="my-strong">resources</span> xmlns:tools="http://schemas.android.com/tools">
+&lt;!-- Base application theme. -->
+&lt;!-- NoActionBar theme로 설정한다. -->
+  &lt;<span class="my-strong">style name="Theme.SampleTab" parent="Theme.MaterialComponents.DayNight.NoActionBar"></span>
+  ...
+  &lt;/style>
+&lt;/resources>  
+</pre><br>
+      AndroidManifest.xml
+      <pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;manifest
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.sample.tab">
+
+  &lt;application
+    android:allowBackup="true"
+    android:icon="@mipmap/ic_launcher"
+    android:label="@string/app_name"
+    android:roundIcon="@mipmap/ic_launcher_round"
+    android:supportsRtl="true"
+    <span class="my-strong">android:theme="@style/Theme.SampleTab"</span>>
+
+    &lt;activity android:name=".MainActivity">
+      &lt;intent-filter>
+        &lt;action android:name="android.intent.action.MAIN" />
+        &lt;category android:name="android.intent.category.LAUNCHER" />
+      &lt;/intent-filter>
+    &lt;/activity>
+
+  &lt;/application>
+&lt;/manifest></pre>
+      <h4>하단 Tab 보여주기</h4>
+      <p><span class="my-strong">BottomNavigationView</span></p>
+      /res/menu/menu_bottom.xml
+      <pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;menu
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  &lt;item
+    android:id="@+id/menuEmail"
+    android:enabled="true"
+    android:icon="@android:drawable/ic_dialog_email"
+    android:title="이메일"
+    app:showAsAction="ifRoom" />
+
+  &lt;item
+    android:id="@+id/menuInfo"
+    android:icon="@android:drawable/ic_dialog_info"
+    android:title="정보"
+    app:showAsAction="ifRoom" />
+
+  &lt;item
+    android:id="@+id/menuMap"
+    android:enabled="true"
+    android:icon="@android:drawable/ic_dialog_map"
+    android:title="위치"
+    app:showAsAction="ifRoom" />
+&lt;/menu></pre><br>
+      /res/layout/activity_main.xml
+      <pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;androidx.constraintlayout.widget.ConstraintLayout>
+  &lt;androidx.coordinatorlayout.widget.CoordinatorLayout>
+  ...
+  &lt;/androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+  &lt;<span class="my-strong">com.google.android.material.bottomnavigation.BottomNavigationView</span>
+    android:id="@+id/bottomNavigation"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:itemBackground="?attr/colorPrimary"
+    app:itemIconTint="@drawable/item_color"
+    app:itemTextColor="@drawable/item_color"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    <span class="my-strong">app:menu="@menu/menu_bottom"</span> />
+
+&lt;/androidx.constraintlayout.widget.ConstraintLayout>  
+</pre><br>
+      MainActivity.kt
+      <pre>
+...
+class MainActivity : AppCompatActivity() {
+  ...
+  override fun onCreate(savedInstanceState: Bundle?) {
+    ...
+    binding.bottomNavigation.<span class="my-strong">setOnNavigationItemSelectedListener</span> {
+      // it: MenuItem
+      when (it.itemId) {
+        R.id.menuEmail->{
+          setFragment(0)
+          showToast("하단탭 0 선택")
+        }
+        R.id.menuInfo->{
+          setFragment(1)
+          showToast("하단탭 1 선택")
+        }
+        R.id.menuMap->{
+          setFragment(2)
+          showToast("하단탭 2 선택")
+        }
+      }
+
+      <span class="my-strong">true</span>
+    }
+
+    binding.bottomNavigation.<span class="my-strong">setOnNavigationItemReselectedListener</span> {
+      // it: MenuItem
+      when (it.itemId) {
+        R.id.menuEmail->{
+          showToast("하단탭 0 또 선택")
+        }
+        R.id.menuInfo->{
+          showToast("하단탭 1 또 선택")
+        }
+        R.id.menuMap->{
+          showToast("하단탭 2 또 선택")
+        }
+      }
+    }
+    ...
+  }
+
+  private fun setFragment(position: Int) {
+    when (position) {
+      0 -> {
+        supportFragmentManager.commit {
+          replace<Fragment1>(R.id.container)
+          setReorderingAllowed(true)
+        }
+      }
+      1 -> {
+        supportFragmentManager.commit {
+          replace<Fragment2>(R.id.container)
+          setReorderingAllowed(true)
+        }
+      }
+      2 -> {
+        supportFragmentManager.commit {
+          replace<Fragment3>(R.id.container)
+          setReorderingAllowed(true)
+        }
+      }
+    }
+  }
+
+  private fun showToast(text: String) {
+    Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT).show()
+  }
+  ...
+}</pre>
+      <h2>05-5 ViewPager 만들기</h2>
+      <ul>
+        <li>ViewPager는 손가락으로 좌우 scroll하여 넘겨 볼 수 있는 기능을 제공한다.</li>
+        <li>화면 전체 또는 일부영역에 사용할 수 있다.</li>
+        <li>내부에 adapter라는 것과 상호작용한다. (RecyclerView에서 다시 설명한다.)<br>Adapter는 view pager에 보여줄 fragment들을 관리하는 역할을 한다.</li>
+        <li>개선된 <a href="https://developer.android.com/guide/navigation/navigation-swipe-view-2" target="_blank">ViewPager2</a>를 사용하자.</li>
+      </ul>
+      /res/layout/activity_main.xml<br>
+      <pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  tools:context=".MainActivity">
+
+  &lt;Button
+    android:id="@+id/buttonGoto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:text="#2 바로가기"
+    android:textSize="24sp" />
+
+  &lt;<span class="my-strong">androidx.viewpager2.widget.ViewPager2</span>
+    android:id="@+id/pager"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+
+&lt;/LinearLayout></pre><br>
+      MainActivit.kt<br>
+      <pre>
+package com.sample.pager
+
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.sample.pager.databinding.ActivityMainBinding
+
+class MainActivity : AppCompatActivity() {
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+    val binding = ActivityMainBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
+    <span class="my-strong">binding.pager.offscreenPageLimit = 3</span>
+    <span class="my-strong">binding.pager.adapter = object : FragmentStateAdapter(this)</span> {
+
+      override fun <span class="my-strong">getItemCount()</span>: Int = 3
+
+      override fun <span class="my-strong">createFragment</span>(position: Int): Fragment = when (position) {
+        1 -> Fragment2()
+        2 -> Fragment3()
+        else -> Fragment1()
+      }
+    }
+
+    binding.buttonGoto.setOnClickListener {
+      binding.pager.currentItem = 2
+    }
+  }
+}</pre>
+      <h2>05-6 바로가기 Menu 만들기</h2>
+      Project 생성 화면에서 <span class="my-strong">Navigation Drawer Activity</span>를 선택한다.<br>
+      참고) <a href="https://developer.android.com/guide/navigation" target="_blank">Navigation</a>
+      <h2>05-7 시간, 날짜 선택 대화상자 표시하기</h2>
+      <code>DialogFragment</code>를 사용해야 한다.<br>
+      참고) <a href="https://developer.android.com/guide/topics/ui/controls/pickers" target="_blank">Picker</a>
+      <pre>
+class MyTimePickerFragment : <span class="my-strong">DialogFragment(), TimePickerDialog.OnTimeSetListener</span> {
+
+  override fun <span class="my-strong">onCreateDialog</span>(savedInstanceState: Bundle?): Dialog {
+    val calendar = Calendar.getInstance()
+
+    <span class="my-strong">return TimePickerDialog</span>(
+      activity,
+      this,
+      calendar.get(Calendar.HOUR_OF_DAY),
+      calendar.get(Calendar.MINUTE),
+      DateFormat.is24HourFormat(context)
+    )
+  }
+
+  // 시간 설정 확인 button을 누르면 호출된다.
+  override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {}
+}
+
+class MyDatePickerFragment() : <span class="my-strong">DialogFragment(), DatePickerDialog.OnDateSetListener</span> {
+
+  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    <span class="my-strong">return</span> activity?.let {
+      val calendar = Calendar.getInstance()
+
+      <span class="my-strong">DatePickerDialog</span>(
+        it,
+        this,
+        calendar.get(Calendar.YEAR),
+        calendar.get(Calendar.MONTH),
+        calendar.get(Calendar.DAY_OF_MONTH)
+      )
+    } ?: super.onCreateDialog(savedInstanceState)
+  }
+
+  // 날짜 설정 확인 button을 누르면 호출된다.
+  override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {}
+}
+...
+// 사용하는 방법
+fun showDatePickerDialog(v: View) {
+  MyDatePickerFragment().<span class="my-strong">show</span>(supportFragmentManager, "datePicker")
+}</pre><br>
+      <h1 class="chapter-title"><span class="chapter-number">06</span>Service와 수신자(Broadcast Receiver) 이해하기</h1>
+      <h2>06-1 Service</h2>
+      <ul>
+        <li>Service란 background에서 실행되는 app의 구성요소이다.</li>
+        <li>System에서 관리한다.</li>
+        <li>Manifest file에 등록해야 한다.</li>
+        <li>UI를 제공하지 않는다.</li>
+      </ul>
+      <h4>Service의 실행 원리와 역할</h4>
+      <ul>
+        <li>Service를 실행하려면 main activity에서 <code>startService()</code>를 호출한다.<br>
+        <pre class="no-bg">
+abstract fun startService(service: Intent!): ComponentName?
+// Intent 객체는 어떤 service를 실행할 것인지에 대한 정보를 담고 있으며
+// system은 service를 시작시킨 후 intent 객체를 service로 전달한다.</pre></li>
+        <li>Service는 실행된 상태를 계속 유지하기 위해 service가 비정상적으로 종료되더라도 system이 자동으로 재실행한다.</li>
+        <li>이미 service가 실행 중일 때 <code class="no-bg">startService()</code>를 다시 호출하면 system이 <code>onCreate()</code>가 아니라 <code>onStartCommand()</code>를 실행한다.<br>
+        <code class="no-bg">onStartCommand()</code>는 service로 전달된 intent 객체를 처리한다. 이렇게 <code class="no-bg">startService()</code>는 실행중인 service에 intent를 전달하는 용도로도 이용한다.</li>
+      </ul>
+      MyService.kt
+      <pre>
+package com.sample.service
+
+import android.app.Service
+import android.content.Intent
+import android.os.IBinder
+import android.util.Log
+
+private const val TAG = "MyService"
+
+class MyService : Service() {
+
+  override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    Log.d(TAG, "onStartCommand() called.")
+
+    intent?.also {
+      processCommand(it)
+    } 
+    // service가 비정상 종료되었다는 의미. System이 자동으로 재시작한다.
+    ?: return Service.START_STICKY 
+
+    return super.onStartCommand(intent, flags, startId)
+  }
+
+  private fun processCommand(intent: Intent) {
+    val command = intent.getStringExtra("command")
+    val name = intent.getStringExtra("name")
+
+    Log.d(TAG, "command=$command, name=$name")
+
+    for (i in 1..5) {
+      try {
+        Thread.sleep(1000)
+      } catch (e: Exception) {
+        e.printStackTrace()
+      }
+      Log.d(TAG, "${i}초 대기.")
+    }
+  }
+}</pre><br>
+/res/layout/activity_main.xml 
+<pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;androidx.constraintlayout.widget.ConstraintLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context=".MainActivity">
+
+  &lt;EditText
+    android:id="@+id/editText"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:ems="10"
+    android:inputType="textPersonName"
+    android:text="Name"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias=".3" />
+
+  &lt;Button
+    android:id="@+id/button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="서비스로 보내기"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias=".6" />
+&lt;/androidx.constraintlayout.widget.ConstraintLayout>
+</pre><br>
+MainActivity.kt 
+<pre>
+package com.sample.service
+
+import android.content.Intent
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.sample.service.databinding.ActivityMainBinding
+
+class MainActivity : AppCompatActivity() {
+
+  private lateinit var binding: ActivityMainBinding
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+    binding = ActivityMainBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
+    binding.button.setOnClickListener {
+      <span class="my-strong">startService</span>(
+        Intent(applicationContext, <span class="my-strong">MyService::class.java</span>)
+          .putExtra("command", "show")
+          .putExtra("name", binding.editText.text.toString())
+      )
+    }
+  }
+}</pre>
+      <h4>Log를 사용하여 Intent의 부가 data 출력하기</h4>
+      <ul>
+        <li>Service에서 activity로 data를 전달할 때는 <code>startActivity()</code>를 사용한다.</li>
+        <li></li>
+      </ul>
+      <h2>06-2 Broadcast 수신자 이해하기</h2>
+      <h4>Broadcast 수신자 등록하고 사용하기</h4>
+      <h4>SMS 내용을 Activity에 나타내기</h4>
+      <h4>Broadcast 수신자 동작 방식 정리하기</h4>
+      <h2>06-3 위험 권한 부여하기</h2>
+      <h4>일반 권한과 위험 권한의 차이점 알아보기</h4>
+      <h4>위험 권한 부여하는 방법 알아보기</h4>
+      <h2>06-4 Resource와 Manifest 이해하기</h2>
+      <h4>Manifest</h4>
+      <h4>Resource의 사용</h4>
+      <h4>Style과 Theme</h4>
+      <h2>06-5 Gradle 이해하기</h2>
+      <h1 class="chapter-title"><span class="chapter-number">07</span>선택 Widget 만들기</h1>
+
       <p id="end">- END -</p>
 </body>
 
